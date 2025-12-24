@@ -32,56 +32,57 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // News/Blog Data and Management
-const newsData = [
-    {
-        id: 1,
-        title: "New Composting Hub Launched in Impendle",
-        excerpt: "Our latest organic waste composting facility is now operational, converting community waste into nutrient-rich soil amendments.",
-        date: "2025-01-15",
-        image: "images/WhatsApp Image 2025-12-24 at 4.32.50 PM.jpeg",
-        content: "We are excited to announce the launch of our new composting hub in Impendle, which will serve as a cornerstone of our circular economy initiative. This facility demonstrates our commitment to sustainable waste management and soil regeneration."
-    },
-    {
-        id: 2,
-        title: "Youth Training Program Graduates 50 New Farmers",
-        excerpt: "Our agricultural training program has successfully graduated 50 young farmers, equipping them with modern farming techniques and business skills.",
-        date: "2025-01-10",
-        image: "images/guy_doing_spinach_harvesting.jpeg",
-        content: "This month marks a significant milestone as we celebrate the graduation of 50 young farmers from our comprehensive agricultural training program. These dedicated individuals are now equipped with the skills and knowledge to transform their communities through sustainable agriculture."
-    },
-    {
-        id: 3,
-        title: "Partnership with Local Schools for Food Gardens",
-        excerpt: "We've partnered with 10 local schools to establish food gardens, promoting food security and environmental education.",
-        date: "2025-01-05",
-        image: "images/HealthySpinachLeaves.jpeg",
-        content: "Education and nutrition go hand in hand. Our new partnership with local schools aims to create sustainable food gardens that will provide fresh vegetables while teaching students about sustainable agriculture and environmental stewardship."
-    },
-    {
-        id: 4,
-        title: "Poultry Development Program Shows Remarkable Success",
-        excerpt: "Our poultry development initiative has helped local farmers establish sustainable chicken farming operations, improving household income and food security.",
-        date: "2024-12-28",
-        image: "images/Pultry.jpeg",
-        content: "Our poultry development program continues to show remarkable results. Local farmers have successfully established sustainable chicken farming operations that not only improve household income but also contribute to community food security."
-    },
-    {
-        id: 5,
-        title: "Spinach Production Reaches New Heights",
-        excerpt: "Our spinach cultivation program has achieved record yields, demonstrating the effectiveness of our sustainable farming techniques.",
-        date: "2024-12-20",
-        image: "images/Spinach.jpeg",
-        content: "The success of our spinach cultivation program demonstrates the power of combining traditional knowledge with modern sustainable farming techniques. Our farmers have achieved record yields while maintaining soil health and environmental sustainability."
-    },
-    {
-        id: 6,
-        title: "Community Vegetable Farming Initiative Expands",
-        excerpt: "Our community vegetable farming program continues to grow, with more families participating in sustainable food production.",
-        date: "2024-12-15",
-        image: "images/SpinachLeaves.jpeg",
-        content: "The expansion of our community vegetable farming initiative represents a significant step toward food security and economic empowerment. More families are now actively participating in sustainable food production, creating a ripple effect of positive change throughout our communities."
+class NewsService {
+    constructor() {
+        this.loadNewsData();
     }
-];
+
+    loadNewsData() {
+        // Try to load from admin updates first
+        const adminNews = localStorage.getItem('publicNewsData');
+        if (adminNews) {
+            this.newsData = JSON.parse(adminNews);
+        } else {
+            // Fallback to default news
+            this.newsData = [
+                {
+                    id: 1,
+                    title: "New Composting Hub Launched in Impendle",
+                    excerpt: "Our latest organic waste composting facility is now operational, converting community waste into nutrient-rich soil amendments.",
+                    date: "2025-01-15",
+                    image: "images/WhatsApp Image 2025-12-24 at 4.32.50 PM.jpeg",
+                    content: "We are excited to announce the launch of our new composting hub in Impendle, which will serve as a cornerstone of our circular economy initiative. This facility demonstrates our commitment to sustainable waste management and soil regeneration."
+                },
+                {
+                    id: 2,
+                    title: "Youth Training Program Graduates 50 New Farmers",
+                    excerpt: "Our agricultural training program has successfully graduated 50 young farmers, equipping them with modern farming techniques and business skills.",
+                    date: "2025-01-10",
+                    image: "images/guy_doing_spinach_harvesting.jpeg",
+                    content: "This month marks a significant milestone as we celebrate the graduation of 50 young farmers from our comprehensive agricultural training program. These dedicated individuals are now equipped with the skills and knowledge to transform their communities through sustainable agriculture."
+                },
+                {
+                    id: 3,
+                    title: "Partnership with Local Schools for Food Gardens",
+                    excerpt: "We've partnered with 10 local schools to establish food gardens, promoting food security and environmental education.",
+                    date: "2025-01-05",
+                    image: "images/HealthySpinachLeaves.jpeg",
+                    content: "Education and nutrition go hand in hand. Our new partnership with local schools aims to create sustainable food gardens that will provide fresh vegetables while teaching students about sustainable agriculture and environmental stewardship."
+                }
+            ];
+        }
+    }
+
+    getAllNews() {
+        return this.newsData;
+    }
+
+    getNewsById(id) {
+        return this.newsData.find(article => article.id === id);
+    }
+}
+
+const newsService = new NewsService();
 
 let currentNewsIndex = 0;
 const newsPerPage = 3;
@@ -109,7 +110,8 @@ function loadNews() {
     const newsContainer = document.getElementById('news-container');
     const loadMoreBtn = document.getElementById('load-more-btn');
     
-    const nextNews = newsData.slice(currentNewsIndex, currentNewsIndex + newsPerPage);
+    const allNews = newsService.getAllNews();
+    const nextNews = allNews.slice(currentNewsIndex, currentNewsIndex + newsPerPage);
     
     nextNews.forEach(article => {
         newsContainer.innerHTML += createNewsArticle(article);
@@ -117,13 +119,13 @@ function loadNews() {
     
     currentNewsIndex += newsPerPage;
     
-    if (currentNewsIndex >= newsData.length) {
+    if (currentNewsIndex >= allNews.length) {
         loadMoreBtn.style.display = 'none';
     }
 }
 
 function openNewsModal(articleId) {
-    const article = newsData.find(a => a.id === articleId);
+    const article = newsService.getNewsById(articleId);
     if (!article) return;
     
     // Create modal
@@ -219,6 +221,18 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Partnership Form Handling
+class ContactService {
+    constructor() {
+        this.dataService = new DataService();
+    }
+
+    submitContact(formData) {
+        return this.dataService.addContact(formData);
+    }
+}
+
+const contactService = new ContactService();
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('partnership-form');
     
@@ -235,8 +249,10 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
         
-        // Simulate form submission (replace with actual API call)
+        // Submit to admin system
         setTimeout(() => {
+            contactService.submitContact(data);
+            
             // Show success message
             showNotification('Thank you for your interest! We will contact you within 24 hours.', 'success');
             

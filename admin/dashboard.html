@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Emasisweni Agri-Bridge</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <nav class="admin-nav">
+            <div class="nav-brand">
+                <img src="../Emasisweni AgriBridge Logo.png" alt="Logo">
+                <span>Admin Panel</span>
+            </div>
+            <button id="logout-btn">Logout</button>
+        </nav>
+        
+        <div class="admin-content">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="news">News Management</button>
+                <button class="tab-btn" data-tab="contacts">Contact Messages</button>
+            </div>
+            
+            <div id="news-tab" class="tab-content active">
+                <div class="section-header">
+                    <h2>News Articles</h2>
+                    <button id="add-news-btn" class="btn-primary">Add New Article</button>
+                </div>
+                
+                <div class="news-list" id="admin-news-list"></div>
+                
+                <div id="news-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3 id="modal-title">Add New Article</h3>
+                        <form id="news-form">
+                            <input type="hidden" id="article-id">
+                            <input type="text" id="article-title" placeholder="Article Title" required>
+                            <textarea id="article-excerpt" placeholder="Article Excerpt" required></textarea>
+                            <textarea id="article-content" placeholder="Full Article Content" required></textarea>
+                            <input type="file" id="article-image" accept="image/*">
+                            <button type="submit">Save Article</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="contacts-tab" class="tab-content">
+                <h2>Contact Messages</h2>
+                <div class="contacts-list" id="contacts-list"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="dashboard.js"></script>
+</body>
+</html>

@@ -343,14 +343,47 @@ const observer = new IntersectionObserver(function(entries) {
     });
 }, observerOptions);
 
-// Observe elements for animation
+// FAQ Functionality
 document.addEventListener('DOMContentLoaded', function() {
-    const animateElements = document.querySelectorAll('.service, .mv-card, .leader, .value, .sustainability-item, .news-article');
+    const faqItems = document.querySelectorAll('.faq-item');
     
-    animateElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        
+        question.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            
+            // Close all FAQ items
+            faqItems.forEach(faq => faq.classList.remove('active'));
+            
+            // Open clicked item if it wasn't active
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        });
     });
+});
+
+// Newsletter Signup
+document.addEventListener('DOMContentLoaded', function() {
+    const newsletterForm = document.getElementById('newsletter-form');
+    
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = this.querySelector('input[type="email"]').value;
+            
+            // Store newsletter signup
+            const newsletters = JSON.parse(localStorage.getItem('newsletters') || '[]');
+            newsletters.push({
+                email: email,
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('newsletters', JSON.stringify(newsletters));
+            
+            showNotification('Thank you for subscribing to our newsletter!', 'success');
+            this.reset();
+        });
+    }
 });

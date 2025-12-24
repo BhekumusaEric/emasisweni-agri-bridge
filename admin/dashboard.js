@@ -1,18 +1,12 @@
 // Admin Dashboard Controller
 class AdminDashboard {
     constructor() {
-        this.authService = new AuthService();
         this.dataService = new DataService();
         this.currentEditId = null;
-        
         this.init();
     }
 
     init() {
-        // Only check auth if we're on dashboard page
-        if (window.location.pathname.includes('dashboard.html')) {
-            this.authService.requireAuth();
-        }
         this.setupEventListeners();
         this.loadNews();
         this.loadContacts();
@@ -21,7 +15,9 @@ class AdminDashboard {
     setupEventListeners() {
         // Logout
         document.getElementById('logout-btn').addEventListener('click', () => {
-            this.authService.logout();
+            localStorage.removeItem('adminAuth');
+            localStorage.removeItem('loginTime');
+            window.location.href = '../admin.html';
         });
 
         // Tabs
@@ -181,10 +177,8 @@ class AdminDashboard {
     }
 }
 
-// Initialize dashboard only on dashboard page
+// Initialize dashboard
 let dashboard;
-if (window.location.pathname.includes('dashboard.html')) {
-    document.addEventListener('DOMContentLoaded', function() {
-        dashboard = new AdminDashboard();
-    });
-}
+document.addEventListener('DOMContentLoaded', function() {
+    dashboard = new AdminDashboard();
+});

@@ -40,27 +40,30 @@ class AuthService {
     }
 }
 
-// Login Form Handler
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('login-form');
-    const errorMessage = document.getElementById('error-message');
-    const authService = new AuthService();
+// Only run login logic if we're on the login page
+if (window.location.pathname.includes('admin.html')) {
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.getElementById('login-form');
+        const errorMessage = document.getElementById('error-message');
+        const authService = new AuthService();
 
-    // Redirect if already authenticated
-    if (authService.isAuthenticated()) {
-        window.location.href = 'admin/dashboard.html';
-    }
-
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        
-        if (authService.login(username, password)) {
+        // Redirect if already authenticated
+        if (authService.isAuthenticated()) {
             window.location.href = 'admin/dashboard.html';
-        } else {
-            errorMessage.textContent = 'Invalid username or password';
+            return;
         }
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (authService.login(username, password)) {
+                window.location.href = 'admin/dashboard.html';
+            } else {
+                errorMessage.textContent = 'Invalid username or password';
+            }
+        });
     });
-});
+}

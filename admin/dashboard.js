@@ -9,7 +9,10 @@ class AdminDashboard {
     }
 
     init() {
-        this.authService.requireAuth();
+        // Only check auth if we're on dashboard page
+        if (window.location.pathname.includes('dashboard.html')) {
+            this.authService.requireAuth();
+        }
         this.setupEventListeners();
         this.loadNews();
         this.loadContacts();
@@ -178,8 +181,10 @@ class AdminDashboard {
     }
 }
 
-// Initialize dashboard
+// Initialize dashboard only on dashboard page
 let dashboard;
-document.addEventListener('DOMContentLoaded', function() {
-    dashboard = new AdminDashboard();
-});
+if (window.location.pathname.includes('dashboard.html')) {
+    document.addEventListener('DOMContentLoaded', function() {
+        dashboard = new AdminDashboard();
+    });
+}

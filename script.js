@@ -50,7 +50,7 @@ class NewsService {
                     title: "New Composting Hub Launched in Impendle",
                     excerpt: "Our latest organic waste composting facility is now operational, converting community waste into nutrient-rich soil amendments.",
                     date: "2025-01-15",
-                    image: "images/WhatsApp Image 2025-12-24 at 4.32.50 PM.jpeg",
+                    image: "./images/WhatsApp Image 2025-12-24 at 4.32.50 PM.jpeg",
                     content: "We are excited to announce the launch of our new composting hub in Impendle, which will serve as a cornerstone of our circular economy initiative. This facility demonstrates our commitment to sustainable waste management and soil regeneration."
                 },
                 {
@@ -58,7 +58,7 @@ class NewsService {
                     title: "Youth Training Program Graduates 50 New Farmers",
                     excerpt: "Our agricultural training program has successfully graduated 50 young farmers, equipping them with modern farming techniques and business skills.",
                     date: "2025-01-10",
-                    image: "images/guy_doing_spinach_harvesting.jpeg",
+                    image: "./images/guy_doing_spinach_harvesting.jpeg",
                     content: "This month marks a significant milestone as we celebrate the graduation of 50 young farmers from our comprehensive agricultural training program. These dedicated individuals are now equipped with the skills and knowledge to transform their communities through sustainable agriculture."
                 },
                 {
@@ -66,7 +66,7 @@ class NewsService {
                     title: "Partnership with Local Schools for Food Gardens",
                     excerpt: "We've partnered with 10 local schools to establish food gardens, promoting food security and environmental education.",
                     date: "2025-01-05",
-                    image: "images/HealthySpinachLeaves.jpeg",
+                    image: "./images/HealthySpinachLeaves.jpeg",
                     content: "Education and nutrition go hand in hand. Our new partnership with local schools aims to create sustainable food gardens that will provide fresh vegetables while teaching students about sustainable agriculture and environmental stewardship."
                 }
             ];

@@ -592,22 +592,23 @@ body {
 }
 
 .values-flow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
     margin-top: 2rem;
 }
 
 .value-item {
     text-align: center;
-    padding: 1.5rem;
+    padding: 2rem 1rem;
     background: white;
-    border-radius: 50px;
+    border-radius: 12px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    min-width: 150px;
     transition: transform 0.3s ease;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .value-item:hover {
@@ -615,27 +616,44 @@ body {
 }
 
 .value-icon {
-    font-size: 1.8rem;
+    font-size: 2.5rem;
     color: #2d5016;
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .value-item h4 {
     color: #2d5016;
     margin-bottom: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .value-item p {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: #666;
+    line-height: 1.4;
 }
 
 .value-connector {
-    color: #2d5016;
-    font-size: 1.2rem;
-    opacity: 0.6;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .values-flow {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .value-item {
+        height: 180px;
+        padding: 1.5rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .values-flow {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Sustainability Section */

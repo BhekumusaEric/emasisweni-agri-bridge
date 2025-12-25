@@ -1,11 +1,18 @@
-// Cookie Management System
+// Enhanced Cookie Manager with HTTPS Security
 class CookieManager {
     constructor() {
         this.cookieConsent = this.getCookie('cookieConsent');
+        this.isSecure = location.protocol === 'https:';
         this.init();
     }
 
     init() {
+        // Force HTTPS in production
+        if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            location.replace('https:' + window.location.href.substring(window.location.protocol.length));
+            return;
+        }
+        
         if (!this.cookieConsent) {
             this.showCookieBanner();
         } else if (this.cookieConsent === 'accepted') {
@@ -16,7 +23,8 @@ class CookieManager {
 
     setCookie(name, value, days = 365) {
         const expires = new Date(Date.now() + days * 864e5).toUTCString();
-        document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Strict`;
+        const secure = this.isSecure ? '; Secure' : '';
+        document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Strict${secure}`;
     }
 
     getCookie(name) {

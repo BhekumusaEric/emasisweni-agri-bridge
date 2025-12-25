@@ -10,7 +10,7 @@ body {
     line-height: 1.6;
     color: #1a1a1a;
     overflow-x: hidden;
-    background: #fafafa;
+    background: var(--very-light-green);
 }
 
 .container {
@@ -24,13 +24,16 @@ body {
     --primary-green: #1e4d2b;
     --secondary-green: #2d5f3f;
     --accent-green: #4a8c5a;
-    --light-green: #e8f5e8;
+    --light-green: #f0f7f0;
+    --very-light-green: #f8fbf8;
+    --soft-green: #e8f4e8;
+    --pale-green: #f4f9f4;
     --dark-text: #1a1a1a;
     --medium-text: #4a4a4a;
     --light-text: #6b7280;
     --white: #ffffff;
-    --light-bg: #fafafa;
-    --border-color: #e5e7eb;
+    --light-bg: #f8fbf8;
+    --border-color: #e0ede0;
     --shadow-light: 0 2px 8px rgba(30, 77, 43, 0.08);
     --shadow-medium: 0 4px 16px rgba(30, 77, 43, 0.12);
     --shadow-heavy: 0 8px 32px rgba(30, 77, 43, 0.16);
@@ -382,7 +385,10 @@ body {
 /* About Section */
 .about {
     padding: 100px 0;
-    background: var(--white);
+    background: linear-gradient(rgba(244, 249, 244, 0.95), rgba(240, 247, 240, 0.95)), url('./images/VegitableFarminginAction.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .about-showcase {
@@ -402,7 +408,7 @@ body {
     gap: 1.5rem;
     margin-bottom: 2.5rem;
     padding: 2rem;
-    background: var(--white);
+    background: var(--light-green);
     border-radius: 0;
     box-shadow: var(--shadow-medium);
     border-left: 4px solid var(--accent-green);
@@ -413,6 +419,7 @@ body {
     transform: translateY(-4px);
     box-shadow: var(--shadow-heavy);
     border-left-color: var(--primary-green);
+    background: var(--white);
 }
 
 .mv-item i {
@@ -662,7 +669,7 @@ body {
 }
 
 .leader {
-    background: var(--white);
+    background: var(--soft-green);
     padding: 2rem;
     border-radius: 0;
     box-shadow: var(--shadow-medium);
@@ -675,6 +682,7 @@ body {
     transform: translateY(-6px);
     box-shadow: var(--shadow-heavy);
     border-top-color: var(--primary-green);
+    background: var(--light-green);
 }
 
 .leader img {
@@ -727,7 +735,7 @@ body {
 .value-item {
     text-align: center;
     padding: 2.5rem 1.5rem;
-    background: var(--white);
+    background: var(--light-green);
     border-radius: 0;
     box-shadow: var(--shadow-medium);
     transition: all 0.3s ease;
@@ -742,6 +750,7 @@ body {
     transform: translateY(-6px);
     box-shadow: var(--shadow-heavy);
     border-bottom-color: var(--primary-green);
+    background: var(--soft-green);
 }
 
 .value-icon {
@@ -795,8 +804,11 @@ body {
 
 /* Sustainability Section */
 .sustainability {
-    padding: 80px 0;
-    background: white;
+    padding: 100px 0;
+    background: linear-gradient(rgba(248, 251, 248, 0.92), rgba(240, 247, 240, 0.92)), url('./images/CompostingHub.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .sustainability-intro {
@@ -806,7 +818,7 @@ body {
 
 .sustainability-intro p {
     font-size: 1.1rem;
-    color: #555;
+    color: var(--medium-text);
     max-width: 800px;
     margin: 0 auto;
 }
@@ -937,8 +949,11 @@ body {
 
 /* Partnership Section */
 .partnership {
-    padding: 80px 0;
-    background: white;
+    padding: 100px 0;
+    background: linear-gradient(rgba(240, 247, 240, 0.95), rgba(232, 244, 232, 0.95)), url('./images/CommunityEngagement.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .partnership-content {
@@ -948,7 +963,7 @@ body {
 }
 
 .partnership-info h3 {
-    color: #2d5016;
+    color: var(--primary-green);
     margin-bottom: 1rem;
 }
 
@@ -959,40 +974,43 @@ body {
 
 .partnership-info li {
     padding: 0.5rem 0;
-    color: #555;
+    color: var(--medium-text);
 }
 
 .partnership-info li:before {
     content: "✓ ";
-    color: #2d5016;
+    color: var(--primary-green);
     font-weight: bold;
 }
 
 .contact-info {
-    background: #f8f9fa;
+    background: rgba(240, 247, 240, 0.8);
     padding: 1.5rem;
-    border-radius: 8px;
+    border-radius: 0;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--border-color);
 }
 
 .contact-info h4 {
-    color: #2d5016;
+    color: var(--primary-green);
     margin-bottom: 1rem;
 }
 
 .contact-info p {
     margin-bottom: 0.5rem;
-    color: #555;
+    color: var(--medium-text);
 }
 
 /* Form Styles */
 .partnership-form {
-    background: #f8f9fa;
+    background: var(--light-green);
     padding: 2rem;
-    border-radius: 8px;
+    border-radius: 0;
+    border: 1px solid var(--border-color);
 }
 
 .partnership-form h3 {
-    color: #2d5016;
+    color: var(--primary-green);
     margin-bottom: 1.5rem;
 }
 
@@ -1003,7 +1021,7 @@ body {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #333;
+    color: var(--dark-text);
     font-weight: 500;
 }
 
@@ -1012,21 +1030,30 @@ body {
 .form-group textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 0;
     font-family: inherit;
     transition: border-color 0.3s ease;
+    background: var(--white);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #2d5016;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 2px rgba(30, 77, 43, 0.1);
 }
 
 .form-group textarea {
     resize: vertical;
+}
+
+.contact-form {
+    background: var(--soft-green);
+    padding: 2rem;
+    border-radius: 0;
+    border: 1px solid var(--border-color);
 }
 
 /* Footer */
@@ -1083,8 +1110,11 @@ body {
 
 /* Testimonials Section */
 .testimonials {
-    padding: 80px 0;
-    background: #f8f9fa;
+    padding: 100px 0;
+    background: linear-gradient(rgba(232, 244, 232, 0.9), rgba(240, 247, 240, 0.9)), url('./images/FarmingCommunityMeeting.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .testimonials-grid {
@@ -1094,11 +1124,20 @@ body {
 }
 
 .testimonial {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    border-radius: 0;
+    box-shadow: var(--shadow-heavy);
     position: relative;
+    backdrop-filter: blur(5px);
+    border-left: 4px solid var(--accent-green);
+    transition: all 0.3s ease;
+}
+
+.testimonial:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(30, 77, 43, 0.2);
 }
 
 .testimonial::before {
@@ -1143,9 +1182,29 @@ body {
 
 /* Impact Metrics */
 .impact-metrics {
-    padding: 80px 0;
-    background: linear-gradient(135deg, #2d5016 0%, #4a7c59 100%);
+    padding: 100px 0;
+    background: linear-gradient(rgba(30, 77, 43, 0.92), rgba(45, 95, 63, 0.88)), url('./images/SchoolGardenSuccess.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: white;
+    position: relative;
+}
+
+.impact-metrics::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(30, 77, 43, 0.1);
+    z-index: 1;
+}
+
+.impact-metrics .container {
+    position: relative;
+    z-index: 2;
 }
 
 .metrics-grid {
@@ -1179,8 +1238,11 @@ body {
 
 /* Get Started Section */
 .get-started {
-    padding: 80px 0;
-    background: white;
+    padding: 100px 0;
+    background: linear-gradient(rgba(248, 251, 248, 0.95), rgba(244, 249, 244, 0.95)), url('./images/YouthTrainingProgram.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .pathways-grid {
@@ -1190,9 +1252,9 @@ body {
 }
 
 .pathway {
-    background: #f8f9fa;
+    background: rgba(255, 255, 255, 0.95);
     padding: 2rem;
-    border-radius: 12px;
+    border-radius: 0;
     text-align: center;
     border: 2px solid transparent;
     transition: all 0.3s ease;
@@ -1200,11 +1262,15 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    backdrop-filter: blur(5px);
+    box-shadow: var(--shadow-medium);
 }
 
 .pathway:hover {
-    border-color: #2d5016;
+    border-color: var(--primary-green);
     transform: translateY(-5px);
+    background: rgba(255, 255, 255, 1);
+    box-shadow: var(--shadow-heavy);
 }
 
 .pathway i {
@@ -1528,7 +1594,7 @@ body {
 }
 
 .news-article {
-    background: var(--white);
+    background: var(--pale-green);
     border-radius: 0;
     padding: 2.5rem;
     box-shadow: var(--shadow-medium);
@@ -1540,6 +1606,7 @@ body {
     transform: translateY(-4px);
     box-shadow: var(--shadow-heavy);
     border-left-color: var(--primary-green);
+    background: var(--light-green);
 }
 
 .article-date {
@@ -1591,7 +1658,7 @@ body {
 }
 
 .sidebar-section {
-    background: var(--white);
+    background: var(--soft-green);
     padding: 2rem;
     border-radius: 0;
     box-shadow: var(--shadow-medium);
@@ -1602,6 +1669,7 @@ body {
 .sidebar-section:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-heavy);
+    background: var(--light-green);
 }
 
 .sidebar-section h3 {
@@ -1633,13 +1701,13 @@ body {
     gap: 1rem;
     margin-bottom: 1.5rem;
     padding: 1rem;
-    background: var(--light-bg);
+    background: var(--pale-green);
     border-radius: 0;
     transition: all 0.3s ease;
 }
 
 .event:hover {
-    background: var(--light-green);
+    background: var(--soft-green);
 }
 
 .event-date {

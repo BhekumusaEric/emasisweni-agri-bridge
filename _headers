@@ -1,20 +1,23 @@
 # Security Headers for GitHub Pages
-# Add these to your web server configuration
+# GitHub Pages automatically provides SSL/HTTPS
 
-# Content Security Policy
-add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self';" always;
+# Content Security Policy with HTTPS enforcement
+Content-Security-Policy: default-src 'self' https:; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https:; upgrade-insecure-requests
+
+# Strict Transport Security (HSTS)
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 # X-Frame-Options
-add_header X-Frame-Options "SAMEORIGIN" always;
+X-Frame-Options: SAMEORIGIN
 
 # X-Content-Type-Options
-add_header X-Content-Type-Options "nosniff" always;
+X-Content-Type-Options: nosniff
 
 # X-XSS-Protection
-add_header X-XSS-Protection "1; mode=block" always;
+X-XSS-Protection: 1; mode=block
 
 # Referrer Policy
-add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+Referrer-Policy: strict-origin-when-cross-origin
 
 # Permissions Policy
-add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+Permissions-Policy: geolocation=(), microphone=(), camera=()

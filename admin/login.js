@@ -49,11 +49,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const validHash = btoa(username + ':' + password);
         const expectedHash = btoa('admin:emasisweni2025');
         
+        // Enhanced admin login with cookie session
         if (validHash === expectedHash) {
             // Reset attempts on successful login
             localStorage.setItem('loginAttempts', '0');
             localStorage.setItem('adminAuth', 'true');
             localStorage.setItem('loginTime', Date.now().toString());
+            
+            // Set secure admin session cookie
+            if (typeof cookieManager !== 'undefined') {
+                cookieManager.setAdminSession('admin_' + Date.now());
+            }
             
             // Clear form
             document.getElementById('username').value = '';

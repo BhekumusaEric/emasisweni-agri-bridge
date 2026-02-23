@@ -1,0 +1,207 @@
+/* =====================================================
+   SERVICES-MOBILE.CSS — Mobile Layout Layer
+   Emasisweni Agri-Bridge Services Portal
+   ⚠️  Import AFTER services-base.css
+   ⚠️  DO NOT import on the desktop (web) page
+   ===================================================== */
+
+/* === MOBILE-SPECIFIC TOKENS === */
+:root {
+    --bottom-nav-h: 68px;
+    --header-h: 60px;
+}
+
+/* ========================================================
+   PORTAL APP SHELL  (mobile: column, padded for bottom nav)
+   ======================================================== */
+.portal-app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-bottom: var(--bottom-nav-h);
+}
+
+/* ========================================================
+   BOTTOM NAV BAR  (mobile only)
+   ======================================================== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: var(--bottom-nav-h);
+    background: #fff;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, .06);
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: .68rem;
+    font-weight: 500;
+    padding: .5rem .75rem;
+    border-radius: 12px;
+    transition: all .2s;
+    min-width: 48px;
+}
+
+.bottom-nav-item i {
+    font-size: 1.1rem;
+}
+
+.bottom-nav-item.active,
+.bottom-nav-item:hover {
+    color: var(--agri-green);
+}
+
+/* Toast lifted above bottom nav on mobile */
+.svc-toast {
+    bottom: calc(var(--bottom-nav-h) + 1rem);
+}
+
+/* ========================================================
+   QUICK STATS  (horizontal scroll chips — mobile only)
+   ======================================================== */
+.quick-stats {
+    display: flex;
+    gap: .6rem;
+    padding: .75rem 1rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.quick-stats::-webkit-scrollbar {
+    display: none;
+}
+
+.stat-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .1rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: .6rem .9rem;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+    min-width: 72px;
+}
+
+.stat-chip i {
+    font-size: .85rem;
+    color: var(--agri-green);
+}
+
+.stat-chip span {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.stat-chip small {
+    font-size: .65rem;
+    color: var(--text-muted);
+}
+
+/* ========================================================
+   SERVICE GRID  (2-column on mobile)
+   ======================================================== */
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: .75rem;
+    padding: 1rem;
+}
+
+/* ========================================================
+   MARKET PRODUCE GRID  (2-column on mobile)
+   ======================================================== */
+.market-produce-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: .75rem;
+    padding: 1rem;
+}
+
+/* ========================================================
+   PARTNER INFO GRID  (2-column on mobile)
+   ======================================================== */
+.partner-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: .75rem;
+    padding: 1rem;
+}
+
+/* ========================================================
+   SLIDE-UP FORM SHEET  (mobile-only overlay pattern)
+   ======================================================== */
+.sliding-form {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: rgba(0, 0, 0, .5);
+    display: flex;
+    align-items: flex-end;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+.form-card {
+    background: #fff;
+    border-radius: 24px 24px 0 0;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 1.25rem 1rem 2.5rem;
+    animation: slideUp .3s ease;
+}
+
+/* ========================================================
+   RESPONSIVE BUMPS  (mobile internal breakpoints)
+   ======================================================== */
+/* ≥ 480px: 3-column grids on larger phones / small tablets */
+@media (min-width: 480px) {
+
+    .service-grid,
+    .market-produce-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ≥ 768px: centre the mobile portal when viewed on a tablet
+   (still mobile CSS — just constrained width) */
+@media (min-width: 768px) {
+    .portal-app {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .bottom-nav {
+        max-width: 600px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 16px 16px 0 0;
+    }
+
+    .role-cards {
+        max-width: 480px;
+        margin: 0 auto 1.5rem;
+    }
+
+    .form-card {
+        max-width: 560px;
+        margin: 0 auto;
+    }
+}

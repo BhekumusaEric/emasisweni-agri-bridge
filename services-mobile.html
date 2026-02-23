@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Services Portal — Emasisweni Agri-Bridge</title>
+    <meta name="description" content="Farmer and market services portal for Emasisweni Agri-Bridge.">
+    <meta name="robots" content="noindex">
+    <!-- MOBILE CSS STACK: shared base → mobile layout overrides -->
+    <link rel="stylesheet" href="./services-base.css">
+    <link rel="stylesheet" href="./services-mobile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="services-body">
+
+    <!-- ROLE SELECTOR -->
+    <div id="role-screen" class="role-screen">
+        <div class="role-bg"></div>
+        <div class="role-content">
+            <img src="./Emasisweni AgriBridge Logo.png" alt="Emasisweni Agri-Bridge" class="role-logo">
+            <h1>Welcome to <br><span>Agri-Bridge Services</span></h1>
+            <p>Tell us who you are so we can show you the right services</p>
+            <div class="role-cards">
+                <button class="role-card" id="role-farmer" onclick="selectRole('farmer')">
+                    <div class="role-icon"><i class="fas fa-tractor"></i></div>
+                    <h3>I'm a Farmer</h3>
+                    <p>Training, market access, waste management &amp; more</p>
+                    <span class="role-arrow"><i class="fas fa-arrow-right"></i></span>
+                </button>
+                <button class="role-card" id="role-market" onclick="selectRole('market')">
+                    <div class="role-icon"><i class="fas fa-store-alt"></i></div>
+                    <h3>I'm a Buyer / Market</h3>
+                    <p>Source fresh produce &amp; connect with local farmers</p>
+                    <span class="role-arrow"><i class="fas fa-arrow-right"></i></span>
+                </button>
+                <button class="role-card" id="role-partner" onclick="selectRole('partner')">
+                    <div class="role-icon"><i class="fas fa-handshake"></i></div>
+                    <h3>I'm a Partner / Investor</h3>
+                    <p>CSR, funding, research &amp; collaboration opportunities</p>
+                    <span class="role-arrow"><i class="fas fa-arrow-right"></i></span>
+                </button>
+            </div>
+            <a href="./index.html" class="role-back"><i class="fas fa-arrow-left"></i> Back to website</a>
+        </div>
+    </div>
+
+    <!-- PORTAL APP (mobile shell) -->
+    <div id="portal-app" class="portal-app" style="display:none;">
+
+        <header class="portal-header">
+            <button class="header-back" onclick="goBackToRoleScreen()" title="Switch role"><i
+                    class="fas fa-th-large"></i></button>
+            <div class="header-brand">
+                <img src="./Emasisweni AgriBridge Logo.png" alt="Logo">
+                <span id="portal-title">Services</span>
+            </div>
+            <button class="header-profile" onclick="openProfile()"><i class="fas fa-user-circle"></i></button>
+        </header>
+
+        <!-- FARMER PORTAL -->
+        <div id="farmer-portal" class="portal-view" style="display:none;">
+            <div class="portal-hero farmer-hero">
+                <div class="portal-hero-text">
+                    <p class="hero-greeting" id="farmer-greeting">Good day, Farmer 👋</p>
+                    <h2>What do you need today?</h2>
+                </div>
+                <img src="./images/VegitableFarminginAction.jpeg" alt="Farming" class="hero-thumb">
+            </div>
+            <div class="quick-stats">
+                <div class="stat-chip"><i class="fas fa-graduation-cap"></i><span
+                        id="my-applications-count">0</span><small>Applications</small></div>
+                <div class="stat-chip"><i class="fas fa-box-open"></i><span
+                        id="my-listings-count">0</span><small>Listings</small></div>
+                <div class="stat-chip"><i class="fas fa-tasks"></i><span
+                        id="my-requests-count">0</span><small>Requests</small></div>
+            </div>
+            <div class="section-tabs">
+                <button class="sec-tab active" data-target="ftab-services">Services</button>
+                <button class="sec-tab" data-target="ftab-produce">My Produce</button>
+                <button class="sec-tab" data-target="ftab-apply">Apply</button>
+                <button class="sec-tab" data-target="ftab-status">Status</button>
+            </div>
+            <div id="ftab-services" class="sec-panel active">
+                <div class="service-grid">
+                    <div class="service-tile" onclick="switchFarmerTab('ftab-apply','training')">
+                        <div class="tile-icon green"><i class="fas fa-graduation-cap"></i></div>
+                        <h4>Training &amp; Mentorship</h4>
+                        <p>Free agricultural training programmes</p><span class="tile-badge free">FREE</span>
+                    </div>
+                    <div class="service-tile" onclick="switchFarmerTab('ftab-produce',null)">
+                        <div class="tile-icon amber"><i class="fas fa-carrot"></i></div>
+                        <h4>List My Produce</h4>
+                        <p>Reach commercial buyers directly</p><span class="tile-badge market">MARKET ACCESS</span>
+                    </div>
+                    <div class="service-tile" onclick="switchFarmerTab('ftab-apply','waste')">
+                        <div class="tile-icon teal"><i class="fas fa-recycle"></i></div>
+                        <h4>Waste Management</h4>
+                        <p>Agricultural waste collection &amp; composting</p><span class="tile-badge eco">ECO</span>
+                    </div>
+                    <div class="service-tile" onclick="switchFarmerTab('ftab-apply','agro')">
+                        <div class="tile-icon indigo"><i class="fas fa-industry"></i></div>
+                        <h4>Agro-Processing</h4>
+                        <p>Value-add processing &amp; packaging support</p><span class="tile-badge plus">SUPPORT</span>
+                    </div>
+                    <div class="service-tile" onclick="switchFarmerTab('ftab-apply','food')">
+                        <div class="tile-icon orange"><i class="fas fa-utensils"></i></div>
+                        <h4>Food Security</h4>
+                        <p>School &amp; community food garden support</p><span
+                            class="tile-badge community">COMMUNITY</span>
+                    </div>
+                    <div class="service-tile" onclick="switchFarmerTab('ftab-apply','climate')">
+                        <div class="tile-icon sky"><i class="fas fa-cloud-sun"></i></div>
+                        <h4>Climate-Smart Farming</h4>
+                        <p>Resilient farming techniques for KZN</p><span class="tile-badge info">RESEARCH</span>
+                    </div>
+                </div>
+            </div>
+            <div id="ftab-produce" class="sec-panel">
+                <div class="panel-section">
+                    <div class="panel-section-header">
+                        <h3>My Produce Listings</h3>
+                        <button class="btn-add-sm" onclick="openProduceForm()"><i class="fas fa-plus"></i> Add</button>
+                    </div>
+                    <div id="farmer-produce-list" class="produce-list">
+                        <div class="empty-panel"><i class="fas fa-seedling"></i>
+                            <p>No produce listed yet.<br>Add your first listing to reach buyers.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide-up sheet (mobile-only pattern) -->
+                <div id="produce-form-wrap" class="sliding-form" style="display:none;">
+                    <div class="form-card">
+                        <div class="form-card-header">
+                            <h3>List Your Produce</h3>
+                            <button class="form-close" onclick="closeProduceForm()"><i
+                                    class="fas fa-times"></i></button>
+                        </div>
+                        <form id="produce-form" onsubmit="submitProduceListing(event)">
+                            <div class="field-group"><label>Your Name <span class="req">*</span></label><input
+                                    type="text" id="p-farmer-name" placeholder="Full name" required></div>
+                            <div class="field-group"><label>Phone Number <span class="req">*</span></label><input
+                                    type="tel" id="p-phone" placeholder="e.g. 071 120 7343" required></div>
+                            <div class="field-group"><label>Location / Area <span class="req">*</span></label><input
+                                    type="text" id="p-location" placeholder="e.g. Impendle, KZN" required></div>
+                            <div class="field-group"><label>Produce Type <span class="req">*</span></label>
+                                <select id="p-type" required>
+                                    <option value="">Select produce type</option>
+                                    <option>Vegetables (Leafy Greens)</option>
+                                    <option>Vegetables (Root Crops)</option>
+                                    <option>Fruit</option>
+                                    <option>Poultry</option>
+                                    <option>Livestock</option>
+                                    <option>Maize / Grain</option>
+                                    <option>Eggs</option>
+                                    <option>Compost / Organic Matter</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="field-group"><label>Produce Name <span class="req">*</span></label><input
+                                    type="text" id="p-name" placeholder="e.g. Spinach, Tomatoes, Broilers" required>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-group"><label>Quantity Available</label><input type="text" id="p-qty"
+                                        placeholder="e.g. 50 kg"></div>
+                                <div class="field-group"><label>Price (per unit)</label><input type="text" id="p-price"
+                                        placeholder="e.g. R25/kg"></div>
+                            </div>
+                            <div class="field-group"><label>Harvest / Available From</label><input type="date"
+                                    id="p-date"></div>
+                            <div class="field-group"><label>Description</label><textarea id="p-desc" rows="3"
+                                    placeholder="Any extra details (organic, pesticide-free, etc.)"></textarea></div>
+                            <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Publish
+                                Listing</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="ftab-apply" class="sec-panel">
+                <div class="panel-section">
+                    <h3>Apply for a Service</h3>
+                    <p class="panel-sub">Select the service you need and complete the short form. We'll contact you
+                        within 2 working days.</p>
+                    <div class="service-selector">
+                        <button class="svc-pill active" data-svc="training"><i class="fas fa-graduation-cap"></i>
+                            Training</button>
+                        <button class="svc-pill" data-svc="waste"><i class="fas fa-recycle"></i> Waste Mgmt</button>
+                        <button class="svc-pill" data-svc="agro"><i class="fas fa-industry"></i>
+                            Agro-Processing</button>
+                        <button class="svc-pill" data-svc="food"><i class="fas fa-utensils"></i> Food Security</button>
+                        <button class="svc-pill" data-svc="climate"><i class="fas fa-cloud-sun"></i> Climate
+                            Smart</button>
+                        <button class="svc-pill" data-svc="market"><i class="fas fa-store"></i> Market Access</button>
+                    </div>
+                    <form id="application-form" onsubmit="submitApplication(event)" class="app-form">
+                        <input type="hidden" id="app-service-type" value="training">
+                        <div class="field-group"><label>Full Name <span class="req">*</span></label><input type="text"
+                                id="app-name" required placeholder="Your full name"></div>
+                        <div class="field-row">
+                            <div class="field-group"><label>Phone <span class="req">*</span></label><input type="tel"
+                                    id="app-phone" required placeholder="071 000 0000"></div>
+                            <div class="field-group"><label>Email</label><input type="email" id="app-email"
+                                    placeholder="Optional"></div>
+                        </div>
+                        <div class="field-group"><label>Area / Village <span class="req">*</span></label><input
+                                type="text" id="app-area" required placeholder="e.g. Impendle"></div>
+                        <div class="field-group"><label>Farm Size</label>
+                            <select id="app-farm-size">
+                                <option value="">Select size</option>
+                                <option>Under 1 hectare</option>
+                                <option>1–5 hectares</option>
+                                <option>5–20 hectares</option>
+                                <option>Over 20 hectares</option>
+                            </select>
+                        </div>
+                        <div class="field-group"><label>Farming Type</label>
+                            <select id="app-farm-type">
+                                <option value="">Select type</option>
+                                <option>Vegetables</option>
+                                <option>Poultry</option>
+                                <option>Livestock / Cattle</option>
+                                <option>Maize / Grain</option>
+                                <option>Mixed Farming</option>
+                                <option>Not yet farming</option>
+                            </select>
+                        </div>
+                        <div class="field-group" id="app-specific-field"></div>
+                        <div class="field-group" id="app-message-field"><label>Tell us more about your
+                                needs</label><textarea id="app-message" rows="3"
+                                placeholder="Any specific challenges or goals..."></textarea></div>
+                        <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Submit
+                            Application</button>
+                    </form>
+                </div>
+            </div>
+            <div id="ftab-status" class="sec-panel">
+                <div class="panel-section">
+                    <h3>My Applications &amp; Requests</h3>
+                    <div id="farmer-status-list" class="status-list">
+                        <div class="empty-panel"><i class="fas fa-clipboard-list"></i>
+                            <p>No applications yet.<br>Submit your first request using the Apply tab.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /farmer-portal -->
+
+        <!-- MARKET PORTAL -->
+        <div id="market-portal" class="portal-view" style="display:none;">
+            <div class="portal-hero market-hero">
+                <div class="portal-hero-text">
+                    <p class="hero-greeting">Source Fresh Produce 🛒</p>
+                    <h2>Browse local farmers &amp; listings</h2>
+                </div>
+                <img src="./images/Spinach.jpeg" alt="Fresh Produce" class="hero-thumb">
+            </div>
+            <div class="search-bar-wrap">
+                <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="produce-search"
+                        placeholder="Search produce, area..." oninput="filterProduce()"></div>
+                <button class="filter-btn" id="filter-btn" onclick="toggleFilter()"><i
+                        class="fas fa-sliders-h"></i></button>
+            </div>
+            <div id="filter-panel" class="filter-panel" style="display:none;">
+                <select id="filter-type" onchange="filterProduce()">
+                    <option value="">All Produce Types</option>
+                    <option>Vegetables (Leafy Greens)</option>
+                    <option>Vegetables (Root Crops)</option>
+                    <option>Fruit</option>
+                    <option>Poultry</option>
+                    <option>Livestock</option>
+                    <option>Maize / Grain</option>
+                    <option>Eggs</option>
+                    <option>Compost / Organic Matter</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div class="section-tabs">
+                <button class="sec-tab active" data-target="mtab-browse">Browse Produce</button>
+                <button class="sec-tab" data-target="mtab-register">Register as Buyer</button>
+                <button class="sec-tab" data-target="mtab-contact">Contact Agri-Bridge</button>
+            </div>
+            <div id="mtab-browse" class="sec-panel active">
+                <div id="market-produce-grid" class="market-produce-grid">
+                    <div class="empty-panel" id="market-empty"><i class="fas fa-box-open"></i>
+                        <p>No produce listed yet.<br>Farmers will publish listings here soon.</p>
+                    </div>
+                </div>
+            </div>
+            <div id="mtab-register" class="sec-panel">
+                <div class="panel-section">
+                    <h3>Register as a Buyer</h3>
+                    <p class="panel-sub">Join our buyer network and get notified when new produce becomes available.</p>
+                    <form id="buyer-form" onsubmit="submitBuyerRegistration(event)" class="app-form">
+                        <div class="field-group"><label>Organisation / Business Name <span
+                                    class="req">*</span></label><input type="text" id="b-org" required
+                                placeholder="e.g. Pietermaritzburg Fresh Market"></div>
+                        <div class="field-group"><label>Contact Person <span class="req">*</span></label><input
+                                type="text" id="b-contact" required placeholder="Full name"></div>
+                        <div class="field-row">
+                            <div class="field-group"><label>Phone <span class="req">*</span></label><input type="tel"
+                                    id="b-phone" required placeholder="071 000 0000"></div>
+                            <div class="field-group"><label>Email <span class="req">*</span></label><input type="email"
+                                    id="b-email" required placeholder="buyer@example.com"></div>
+                        </div>
+                        <div class="field-group"><label>Buyer Type <span class="req">*</span></label>
+                            <select id="b-type" required>
+                                <option value="">Select type</option>
+                                <option>Retail Market / Supermarket</option>
+                                <option>Fresh Produce Market</option>
+                                <option>Restaurant / Hospitality</option>
+                                <option>School / Institution</option>
+                                <option>Processing Company</option>
+                                <option>Individual / Household</option>
+                                <option>Export / Wholesale</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="field-group"><label>Produce Interested In</label><textarea id="b-produce" rows="2"
+                                placeholder="e.g. Spinach, Tomatoes, Broilers — weekly supply"></textarea></div>
+                        <div class="field-row">
+                            <div class="field-group"><label>Volume Needed</label><input type="text" id="b-volume"
+                                    placeholder="e.g. 200 kg/week"></div>
+                            <div class="field-group"><label>Location</label><input type="text" id="b-location"
+                                    placeholder="City / Area"></div>
+                        </div>
+                        <div class="field-group"><label>Additional Notes</label><textarea id="b-notes" rows="2"
+                                placeholder="Quality requirements, certifications..."></textarea></div>
+                        <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Register as
+                            Buyer</button>
+                    </form>
+                </div>
+            </div>
+            <div id="mtab-contact" class="sec-panel">
+                <div class="panel-section">
+                    <h3>Contact Agri-Bridge Market Team</h3>
+                    <p class="panel-sub">Have a procurement need? Our team will connect you with the right farmers.</p>
+                    <div class="contact-info-card">
+                        <a href="tel:+27711207343" class="contact-row">
+                            <div class="contact-row-icon"><i class="fas fa-phone"></i></div>
+                            <div><span>Call Us</span><strong>071 120 7343</strong></div><i
+                                class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="mailto:emasisweni.agri@gmail.com" class="contact-row">
+                            <div class="contact-row-icon"><i class="fas fa-envelope"></i></div>
+                            <div><span>Email</span><strong>emasisweni.agri@gmail.com</strong></div><i
+                                class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="https://wa.me/27711207343" target="_blank" class="contact-row whatsapp-row">
+                            <div class="contact-row-icon wa"><i class="fab fa-whatsapp"></i></div>
+                            <div><span>WhatsApp</span><strong>Chat on WhatsApp</strong></div><i
+                                class="fas fa-chevron-right"></i>
+                        </a>
+                        <div class="contact-row no-link">
+                            <div class="contact-row-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div><span>Visit Us</span><strong>555 Phindangene, Impendle, 3227</strong></div>
+                        </div>
+                    </div>
+                    <form id="market-contact-form" onsubmit="submitMarketContact(event)" class="app-form"
+                        style="margin-top:1.5rem;">
+                        <div class="field-group"><label>Name <span class="req">*</span></label><input type="text"
+                                id="mc-name" required placeholder="Your name"></div>
+                        <div class="field-group"><label>Phone <span class="req">*</span></label><input type="tel"
+                                id="mc-phone" required placeholder="071 000 0000"></div>
+                        <div class="field-group"><label>Message <span class="req">*</span></label><textarea
+                                id="mc-message" rows="4" required
+                                placeholder="Describe what produce you need, quantities, timeframes..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send
+                            Message</button>
+                    </form>
+                </div>
+            </div>
+        </div><!-- /market-portal -->
+
+        <!-- PARTNER PORTAL -->
+        <div id="partner-portal" class="portal-view" style="display:none;">
+            <div class="portal-hero partner-hero">
+                <div class="portal-hero-text">
+                    <p class="hero-greeting">Partner With Us 🤝</p>
+                    <h2>Create lasting community impact</h2>
+                </div>
+                <img src="./images/WhatsApp Image 2025-12-24 at 4.32.50 PM.jpeg" alt="Partnership" class="hero-thumb">
+            </div>
+            <div class="partner-info-grid">
+                <div class="partner-info-card"><i class="fas fa-building"></i>
+                    <h4>CSR Partnerships</h4>
+                    <p>Corporate social responsibility aligned with UN SDGs and SA development goals</p>
+                </div>
+                <div class="partner-info-card"><i class="fas fa-flask"></i>
+                    <h4>Research Collaboration</h4>
+                    <p>Field-based agricultural research in KwaZulu-Natal communities</p>
+                </div>
+                <div class="partner-info-card"><i class="fas fa-landmark"></i>
+                    <h4>Government Partnerships</h4>
+                    <p>Supporting DARD, COGTA and municipal development programmes</p>
+                </div>
+                <div class="partner-info-card"><i class="fas fa-chart-line"></i>
+                    <h4>Investment Opportunities</h4>
+                    <p>Impact investment in sustainable farming, composting hubs and agro-processing</p>
+                </div>
+            </div>
+            <div class="panel-section" style="padding:0 1rem 2rem;">
+                <h3>Express Your Interest</h3>
+                <form id="partner-form" onsubmit="submitPartnerInquiry(event)" class="app-form">
+                    <div class="field-group"><label>Organisation <span class="req">*</span></label><input type="text"
+                            id="pt-org" required placeholder="Organisation name"></div>
+                    <div class="field-group"><label>Contact Person <span class="req">*</span></label><input type="text"
+                            id="pt-contact" required placeholder="Full name"></div>
+                    <div class="field-row">
+                        <div class="field-group"><label>Phone <span class="req">*</span></label><input type="tel"
+                                id="pt-phone" required placeholder="071 000 0000"></div>
+                        <div class="field-group"><label>Email <span class="req">*</span></label><input type="email"
+                                id="pt-email" required placeholder="name@org.com"></div>
+                    </div>
+                    <div class="field-group"><label>Partnership Type <span class="req">*</span></label>
+                        <select id="pt-type" required>
+                            <option value="">Select type</option>
+                            <option>Investment</option>
+                            <option>CSR / Corporate</option>
+                            <option>Government</option>
+                            <option>NGO / Non-profit</option>
+                            <option>Research Institution</option>
+                            <option>International Organisation</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="field-group"><label>How can we collaborate?</label><textarea id="pt-message" rows="4"
+                            placeholder="Describe your partnership interest and goals..."></textarea></div>
+                    <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send Inquiry</button>
+                </form>
+            </div>
+        </div><!-- /partner-portal -->
+
+        <!-- Bottom Nav (mobile-only) -->
+        <nav class="bottom-nav">
+            <a href="./index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="./programs.html" class="bottom-nav-item"><i class="fas fa-leaf"></i><span>Programs</span></a>
+            <a href="./services-mobile.html" class="bottom-nav-item active"><i
+                    class="fas fa-concierge-bell"></i><span>Services</span></a>
+            <a href="./news.html" class="bottom-nav-item"><i class="fas fa-newspaper"></i><span>News</span></a>
+            <a href="./contact.html" class="bottom-nav-item"><i class="fas fa-phone"></i><span>Contact</span></a>
+        </nav>
+
+    </div><!-- /portal-app -->
+
+    <!-- Toast -->
+    <div id="svc-toast" class="svc-toast" aria-live="polite"></div>
+
+    <!-- Produce Detail Modal -->
+    <div id="produce-modal" class="modal-overlay" style="display:none;" onclick="closeProduce(event)">
+        <div class="produce-modal-card">
+            <button class="form-close" onclick="closeProduce()"><i class="fas fa-times"></i></button>
+            <div id="produce-modal-body"></div>
+            <a class="btn-submit" id="produce-contact-link" href="tel:+27711207343"><i class="fas fa-phone"></i> Contact
+                Farmer</a>
+        </div>
+    </div>
+
+    <!-- Shared data layer only (no layout code) -->
+    <script src="./services.js"></script>
+</body>
+
+</html>

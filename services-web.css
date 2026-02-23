@@ -1,0 +1,474 @@
+/* =====================================================
+   SERVICES-WEB.CSS — Desktop / Web Layout Layer
+   Emasisweni Agri-Bridge Services Portal
+   ⚠️  Import AFTER services-base.css
+   ⚠️  DO NOT import on the mobile page
+   ===================================================== */
+
+/* === WEB-SPECIFIC TOKENS === */
+:root {
+    --sidebar-w: 280px;
+    --header-h: 64px;
+    --content-max: 900px;
+}
+
+/* ========================================================
+   BODY / LAYOUT SHELL  (web: sidebar + content)
+   ======================================================== */
+body.services-body {
+    background: #f0f4f1;
+}
+
+/* Full-page grid when a portal is active */
+.portal-app {
+    display: grid;
+    grid-template-columns: var(--sidebar-w) 1fr;
+    grid-template-rows: var(--header-h) 1fr;
+    min-height: 100vh;
+}
+
+/* ========================================================
+   STICKY HEADER  (web — full width top bar)
+   ======================================================== */
+.portal-header {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    height: var(--header-h);
+    padding: 0 1.5rem;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Larger logo & title on desktop */
+.header-brand img {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+}
+
+.header-brand span {
+    font-size: 1.1rem;
+}
+
+/* ========================================================
+   SIDEBAR  (web only)
+   ======================================================== */
+.web-sidebar {
+    grid-column: 1;
+    grid-row: 2;
+    background: #fff;
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem;
+    position: sticky;
+    top: var(--header-h);
+    height: calc(100vh - var(--header-h));
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+.sidebar-portal-badge {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .75rem 1rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: .5rem;
+    color: #fff;
+    font-weight: 700;
+    font-size: .9rem;
+}
+
+.sidebar-portal-badge.farmer {
+    background: linear-gradient(135deg, #1a7a40, #0f4d28);
+}
+
+.sidebar-portal-badge.market {
+    background: linear-gradient(135deg, #c47a10, #8a5000);
+}
+
+.sidebar-portal-badge.partner {
+    background: linear-gradient(135deg, #3a46a0, #1e2460);
+}
+
+.sidebar-portal-badge i {
+    font-size: 1.1rem;
+}
+
+.sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: .5rem 0;
+}
+
+.sidebar-nav-link {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding: .7rem 1rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: .88rem;
+    font-weight: 500;
+    transition: all .2s;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+}
+
+.sidebar-nav-link i {
+    width: 18px;
+    text-align: center;
+    font-size: .95rem;
+}
+
+.sidebar-nav-link:hover {
+    background: var(--surface);
+    color: var(--text-primary);
+}
+
+.sidebar-nav-link.active {
+    background: rgba(26, 122, 64, .1);
+    color: var(--agri-green);
+    font-weight: 600;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.sidebar-footer a {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: .82rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color .2s;
+}
+
+.sidebar-footer a:hover {
+    color: var(--agri-green);
+}
+
+/* ========================================================
+   MAIN CONTENT AREA  (web)
+   ======================================================== */
+.web-content {
+    grid-column: 2;
+    grid-row: 2;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+/* Constrain content width for readability */
+.portal-view {
+    max-width: var(--content-max);
+}
+
+/* ========================================================
+   HERO  (wider on desktop)
+   ======================================================== */
+.portal-hero {
+    border-radius: var(--radius);
+    padding: 1.75rem 2rem;
+    margin-bottom: 1.25rem;
+}
+
+.portal-hero h2 {
+    font-size: 1.6rem;
+}
+
+.hero-thumb {
+    width: 96px;
+    height: 96px;
+    border-radius: var(--radius);
+}
+
+/* ========================================================
+   TABS  (desktop — not sticky, inline)
+   ======================================================== */
+.section-tabs {
+    position: static;
+    /* override mobile sticky */
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    border: 1px solid var(--border);
+    border-bottom: 2px solid var(--border);
+    padding: 0 1.25rem;
+    margin-bottom: -1px;
+}
+
+.sec-tab {
+    font-size: .9rem;
+    padding: .85rem 1.25rem;
+}
+
+/* ========================================================
+   SERVICE GRID  (3-column on desktop)
+   ======================================================== */
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1.25rem 0;
+}
+
+.service-tile {
+    border-radius: var(--radius);
+}
+
+.service-tile h4 {
+    font-size: .9rem;
+}
+
+.service-tile p {
+    font-size: .78rem;
+}
+
+/* ========================================================
+   MARKET PRODUCE GRID  (4-column on desktop)
+   ======================================================== */
+.market-produce-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1.25rem 0;
+}
+
+.mpc-header {
+    height: 90px;
+    font-size: 2.5rem;
+}
+
+/* ========================================================
+   PARTNER INFO GRID  (4-column on desktop)
+   ======================================================== */
+.partner-info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1.25rem 0;
+}
+
+.partner-info-card {
+    padding: 1.25rem;
+}
+
+.partner-info-card i {
+    font-size: 1.6rem;
+}
+
+/* ========================================================
+   FORMS  (web: inline panels, no slide-up sheet)
+   ======================================================== */
+.panel-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.panel-section h3 {
+    font-size: 1.05rem;
+}
+
+/* On desktop, form always visible — no sliding overlay needed */
+.sliding-form {
+    position: static;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    display: block;
+    /* always visible */
+}
+
+.form-card {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    animation: none;
+}
+
+/* Two-column form layout on desktop */
+.app-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.app-form .field-row,
+.app-form .service-selector,
+.app-form .btn-submit,
+.app-form #app-specific-field,
+.app-form #app-message-field {
+    grid-column: 1 / -1;
+    /* full width items */
+}
+
+/* ========================================================
+   STAT CHIPS  (horizontal row on desktop, no scroll)
+   ======================================================== */
+.quick-stats {
+    display: flex;
+    gap: 1rem;
+    padding: 0 0 1.25rem;
+    overflow: visible;
+}
+
+.stat-chip {
+    flex: 1;
+    min-width: 0;
+    border-radius: var(--radius);
+    padding: 1.1rem 1rem;
+}
+
+.stat-chip span {
+    font-size: 1.5rem;
+}
+
+.stat-chip small {
+    font-size: .72rem;
+}
+
+/* ========================================================
+   PRODUCE LIST  (wider rows on desktop)
+   ======================================================== */
+.produce-item {
+    border-radius: var(--radius-sm);
+}
+
+/* ========================================================
+   MODAL  (centered dialog on desktop, not bottom sheet)
+   ======================================================== */
+.modal-overlay {
+    align-items: center;
+    justify-content: center;
+}
+
+.produce-modal-card {
+    border-radius: var(--radius);
+    max-width: 480px;
+    max-height: 85vh;
+    animation: fadeIn .2s ease;
+}
+
+/* ========================================================
+   TOAST  (top-right on desktop)
+   ======================================================== */
+.svc-toast {
+    bottom: auto;
+    top: calc(var(--header-h) + 1rem);
+    right: 1.5rem;
+    left: auto;
+    transform: translateY(-8px);
+    border-radius: 10px;
+}
+
+.svc-toast.show {
+    transform: translateY(0);
+}
+
+/* ========================================================
+   HIDE mobile-only elements on desktop
+   ======================================================== */
+.bottom-nav {
+    display: none !important;
+}
+
+/* ========================================================
+   RESPONSIVE COLLAPSE  (sidebar hidden below 900px)
+   ======================================================== */
+@media (max-width: 900px) {
+    .portal-app {
+        grid-template-columns: 1fr;
+        grid-template-rows: var(--header-h) auto 1fr;
+    }
+
+    .portal-header {
+        grid-column: 1;
+    }
+
+    .web-sidebar {
+        grid-column: 1;
+        grid-row: 2;
+        position: static;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: .75rem 1rem;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        gap: .25rem;
+    }
+
+    .sidebar-portal-badge {
+        display: none;
+    }
+
+    .sidebar-divider {
+        display: none;
+    }
+
+    .sidebar-footer {
+        display: none;
+    }
+
+    .sidebar-nav-link {
+        padding: .4rem .85rem;
+        font-size: .8rem;
+        border-radius: 100px;
+    }
+
+    .web-content {
+        grid-column: 1;
+        grid-row: 3;
+        padding: 1rem;
+    }
+
+    .service-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .market-produce-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .partner-info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .app-form {
+        grid-template-columns: 1fr;
+    }
+
+    .app-form .field-row {
+        grid-column: 1;
+    }
+
+    .app-form .btn-submit,
+    .app-form #app-specific-field,
+    .app-form #app-message-field {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: 520px) {
+    .market-produce-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

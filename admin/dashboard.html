@@ -1,60 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Emasisweni Agri-Bridge</title>
+    <title>Admin Dashboard — Emasisweni Agri-Bridge</title>
     <link rel="stylesheet" href="admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <div class="admin-container">
-        <nav class="admin-nav">
-            <div class="nav-brand">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
                 <img src="../Emasisweni AgriBridge Logo.png" alt="Logo">
                 <span>Admin Panel</span>
             </div>
-            <button id="logout-btn">Logout</button>
-        </nav>
-        
-        <div class="admin-content">
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="news">News Management</button>
-                <button class="tab-btn" data-tab="contacts">Contact Messages</button>
-            </div>
-            
-            <div id="news-tab" class="tab-content active">
-                <div class="section-header">
-                    <h2>News Articles</h2>
-                    <button id="add-news-btn" class="btn-primary">Add New Article</button>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tab="news">
+                    <i class="fas fa-newspaper"></i>
+                    <span>News Articles</span>
+                </button>
+                <button class="nav-item" data-tab="contacts">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact Messages</span>
+                    <span class="badge" id="contacts-badge">0</span>
+                </button>
+            </nav>
+            <button id="logout-btn" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- News Tab -->
+            <div id="news-tab" class="tab-panel active">
+                <div class="panel-header">
+                    <div>
+                        <h1>News Articles</h1>
+                        <p class="subtitle">Manage and publish news for the website</p>
+                    </div>
+                    <button id="add-news-btn" class="btn-primary">
+                        <i class="fas fa-plus"></i> New Article
+                    </button>
                 </div>
-                
-                <div class="news-list" id="admin-news-list"></div>
-                
-                <div id="news-modal" class="modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h3 id="modal-title">Add New Article</h3>
-                        <form id="news-form">
-                            <input type="hidden" id="article-id">
-                            <input type="text" id="article-title" placeholder="Article Title" required>
-                            <textarea id="article-excerpt" placeholder="Article Excerpt" required></textarea>
-                            <textarea id="article-content" placeholder="Full Article Content" required></textarea>
-                            <input type="file" id="article-image" accept="image/*">
-                            <button type="submit">Save Article</button>
-                        </form>
+
+                <div class="articles-grid" id="admin-news-list">
+                    <!-- Articles rendered here -->
+                </div>
+            </div>
+
+            <!-- Contacts Tab -->
+            <div id="contacts-tab" class="tab-panel">
+                <div class="panel-header">
+                    <div>
+                        <h1>Contact Messages</h1>
+                        <p class="subtitle">Partnership inquiries and contact form submissions</p>
+                    </div>
+                    <button id="clear-contacts-btn" class="btn-danger">
+                        <i class="fas fa-trash"></i> Clear All Read
+                    </button>
+                </div>
+
+                <div class="contacts-list" id="contacts-list">
+                    <!-- Contacts rendered here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Article Editor Modal -->
+    <div id="article-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 id="modal-title">New Article</h2>
+                <button class="modal-close" id="modal-close-btn" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="article-form" class="article-form">
+                <input type="hidden" id="article-id">
+
+                <!-- Image Upload Zone -->
+                <div class="form-section">
+                    <label class="form-label">Article Image</label>
+                    <div class="image-upload-zone" id="image-drop-zone">
+                        <div class="upload-placeholder" id="upload-placeholder">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop an image here</p>
+                            <span>or</span>
+                            <label for="article-image" class="upload-browse-btn">
+                                <i class="fas fa-folder-open"></i> Browse Files
+                            </label>
+                            <input type="file" id="article-image" accept="image/*" hidden>
+                            <p class="upload-hint">Supports JPG, PNG, WEBP · Max 10MB</p>
+                        </div>
+                        <div class="image-preview-wrap" id="image-preview-wrap" style="display:none;">
+                            <img id="image-preview" src="" alt="Preview">
+                            <div class="image-preview-actions">
+                                <button type="button" class="btn-replace-img" id="replace-image-btn">
+                                    <i class="fas fa-exchange-alt"></i> Replace Image
+                                </button>
+                                <button type="button" class="btn-remove-img" id="remove-image-btn">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div id="contacts-tab" class="tab-content">
-                <h2>Contact Messages</h2>
-                <div class="contacts-list" id="contacts-list"></div>
-            </div>
+
+                <!-- Article Fields -->
+                <div class="form-section">
+                    <label class="form-label" for="article-title">Article Title <span class="required">*</span></label>
+                    <input type="text" id="article-title" placeholder="e.g. New Composting Hub Opens in Impendle"
+                        required maxlength="150">
+                    <span class="char-count" id="title-count">0 / 150</span>
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label" for="article-excerpt">Short Excerpt <span
+                            class="required">*</span></label>
+                    <textarea id="article-excerpt"
+                        placeholder="One or two sentences summarising the article (shown on cards)" rows="3" required
+                        maxlength="300"></textarea>
+                    <span class="char-count" id="excerpt-count">0 / 300</span>
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label" for="article-content">Full Article Content <span
+                            class="required">*</span></label>
+                    <div class="editor-toolbar" id="editor-toolbar">
+                        <button type="button" data-cmd="bold" title="Bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-cmd="italic" title="Italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-cmd="underline" title="Underline"><i
+                                class="fas fa-underline"></i></button>
+                        <span class="toolbar-sep"></span>
+                        <button type="button" data-cmd="insertUnorderedList" title="Bullet List"><i
+                                class="fas fa-list-ul"></i></button>
+                        <button type="button" data-cmd="insertOrderedList" title="Numbered List"><i
+                                class="fas fa-list-ol"></i></button>
+                        <span class="toolbar-sep"></span>
+                        <button type="button" data-cmd="h2" title="Heading"><i class="fas fa-heading"></i></button>
+                        <button type="button" data-cmd="removeFormat" title="Clear Formatting"><i
+                                class="fas fa-remove-format"></i></button>
+                    </div>
+                    <div id="article-content-editor" class="content-editor" contenteditable="true" spellcheck="true"
+                        placeholder="Write the full article here..."></div>
+                    <input type="hidden" id="article-content">
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label" for="article-category">Category</label>
+                    <select id="article-category">
+                        <option value="news">General News</option>
+                        <option value="training">Training & Education</option>
+                        <option value="impact">Community Impact</option>
+                        <option value="partnership">Partnerships</option>
+                        <option value="sustainability">Sustainability</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-article-btn">Cancel</button>
+                    <button type="submit" class="btn-primary" id="save-article-btn">
+                        <i class="fas fa-save"></i> Save Article
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-    
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
     <script src="dashboard-auth.js"></script>
     <script src="data-service.js"></script>
     <script src="dashboard.js"></script>
 </body>
+
 </html>

@@ -84,4 +84,63 @@ class DataService {
         localStorage.setItem('contactMessages', JSON.stringify(filtered));
         return true;
     }
+
+    // --- Farmer Management ---
+    getAllFarmers() {
+        return JSON.parse(localStorage.getItem('agri_users') || '[]');
+    }
+
+    deleteFarmer(id) {
+        const farmers = this.getAllFarmers();
+        const filtered = farmers.filter(f => f.id !== id);
+        localStorage.setItem('agri_users', JSON.stringify(filtered));
+
+        // Optionally clean up related data
+        const listings = this.getAllListings().filter(l => l.userId !== id);
+        localStorage.setItem('agri_listings', JSON.stringify(listings));
+
+        const apps = this.getAllApplications().filter(a => a.userId !== id);
+        localStorage.setItem('agri_applications', JSON.stringify(apps));
+
+        return true;
+    }
+
+    // --- Produce Market Management ---
+    getAllListings() {
+        return JSON.parse(localStorage.getItem('agri_listings') || '[]');
+    }
+
+    deleteListing(id) {
+        const listings = this.getAllListings();
+        const filtered = listings.filter(l => l.id !== id);
+        localStorage.setItem('agri_listings', JSON.stringify(filtered));
+        return true;
+    }
+
+    updateListingStatus(id, newStatus) {
+        const listings = this.getAllListings();
+        const item = listings.find(l => l.id === id);
+        if (item) {
+            item.status = newStatus;
+            localStorage.setItem('agri_listings', JSON.stringify(listings));
+            return true;
+        }
+        return false;
+    }
+
+    // --- Application Management ---
+    getAllApplications() {
+        return JSON.parse(localStorage.getItem('agri_applications') || '[]');
+    }
+
+    updateApplicationStatus(id, newStatus) {
+        const apps = this.getAllApplications();
+        const item = apps.find(a => a.id === id);
+        if (item) {
+            item.status = newStatus;
+            localStorage.setItem('agri_applications', JSON.stringify(apps));
+            return true;
+        }
+        return false;
+    }
 }

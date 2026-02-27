@@ -28,6 +28,31 @@
                     <span>Contact Messages</span>
                     <span class="badge" id="contacts-badge">0</span>
                 </button>
+                <div class="sidebar-divider" style="height: 1px; background: rgba(255,255,255,0.1); margin: 1rem 0;">
+                </div>
+                <button class="nav-item" data-tab="farmers">
+                    <i class="fas fa-users"></i>
+                    <span>Registered Farmers</span>
+                    <span class="badge" id="farmers-badge" style="background:var(--primary);display:none;">0</span>
+                </button>
+                <button class="nav-item" data-tab="produce">
+                    <i class="fas fa-store"></i>
+                    <span>Produce Market</span>
+                    <span class="badge" id="produce-badge" style="background:#e67e22;display:none;">0</span>
+                </button>
+                <button class="nav-item" data-tab="applications">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Service Applications</span>
+                    <span class="badge" id="apps-badge" style="background:#3498db;display:none;">0</span>
+                </button>
+                <div class="sidebar-divider" style="height: 1px; background: rgba(255,255,255,0.1); margin: 1rem 0;">
+                </div>
+                <a href="https://emasisweniagribridge.org/SOGo/so/duma@emasisweniagribridge.org/Mail/view#!/Mail/0/INBOX"
+                    target="_blank" class="nav-item" style="text-decoration: none; color: inherit;">
+                    <i class="fas fa-envelope-open-text"></i>
+                    <span>SOGo Webmail <i class="fas fa-external-link-alt"
+                            style="font-size: 0.7em; margin-left: 5px;"></i></span>
+                </a>
             </nav>
             <button id="logout-btn" class="logout-btn">
                 <i class="fas fa-sign-out-alt"></i>
@@ -68,6 +93,45 @@
 
                 <div class="contacts-list" id="contacts-list">
                     <!-- Contacts rendered here -->
+                </div>
+            </div>
+
+            <!-- Farmers Tab -->
+            <div id="farmers-tab" class="tab-panel">
+                <div class="panel-header">
+                    <div>
+                        <h1>Registered Farmers</h1>
+                        <p class="subtitle">Manage farmer accounts and profiles</p>
+                    </div>
+                </div>
+                <div class="contacts-list" id="admin-farmers-list">
+                    <!-- Farmers rendered here -->
+                </div>
+            </div>
+
+            <!-- Produce Market Tab -->
+            <div id="produce-tab" class="tab-panel">
+                <div class="panel-header">
+                    <div>
+                        <h1>Produce Market Listings</h1>
+                        <p class="subtitle">Review, approve, and manage farm produce</p>
+                    </div>
+                </div>
+                <div class="contacts-list" id="admin-produce-list">
+                    <!-- Produce rendered here -->
+                </div>
+            </div>
+
+            <!-- Applications Tab -->
+            <div id="applications-tab" class="tab-panel">
+                <div class="panel-header">
+                    <div>
+                        <h1>Service Applications</h1>
+                        <p class="subtitle">Process training and service requests from farmers</p>
+                    </div>
+                </div>
+                <div class="contacts-list" id="admin-applications-list">
+                    <!-- Applications rendered here -->
                 </div>
             </div>
         </main>

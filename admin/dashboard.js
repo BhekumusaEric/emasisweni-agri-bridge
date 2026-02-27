@@ -21,6 +21,9 @@ class AdminDashboard {
         this.setupLogout();
         this.loadNews();
         this.loadContacts();
+        this.loadFarmers();
+        this.loadProduce();
+        this.loadApplications();
     }
 
     // ──────────────────────────────
@@ -214,7 +217,7 @@ class AdminDashboard {
     // Save article (add or update)
     // ──────────────────────────────
     saveArticle() {
-        const title   = document.getElementById('article-title').value.trim();
+        const title = document.getElementById('article-title').value.trim();
         const excerpt = document.getElementById('article-excerpt').value.trim();
         const content = document.getElementById('article-content-editor').innerHTML.trim();
         const category = document.getElementById('article-category').value;
@@ -280,7 +283,7 @@ class AdminDashboard {
                 partnership: 'Partnerships', sustainability: 'Sustainability'
             }[category] || 'News';
 
-            const date = article.date ? new Date(article.date).toLocaleDateString('en-ZA', { day:'numeric', month:'short', year:'numeric' }) : '';
+            const date = article.date ? new Date(article.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
 
             return `
                 <div class="article-card">
@@ -359,12 +362,12 @@ class AdminDashboard {
 
         list.innerHTML = contacts.map(c => {
             const name = this.escape(c['contact-name'] || 'Unknown');
-            const org  = this.escape(c.organization || 'Individual');
+            const org = this.escape(c.organization || 'Individual');
             const email = this.escape(c.email || '');
             const phone = this.escape(c.phone || 'N/A');
-            const type  = this.escape(c['partnership-type'] || 'N/A');
-            const msg   = this.escape(c.message || '');
-            const date  = c.date ? new Date(c.date).toLocaleString('en-ZA') : '';
+            const type = this.escape(c['partnership-type'] || 'N/A');
+            const msg = this.escape(c.message || '');
+            const date = c.date ? new Date(c.date).toLocaleString('en-ZA') : '';
 
             return `
                 <div class="contact-card">
@@ -391,6 +394,184 @@ class AdminDashboard {
         this.dataService.deleteContact(id);
         this.loadContacts();
         this.showToast('Message deleted.', 'success');
+    }
+
+    // ──────────────────────────────
+    // Farmers Management
+    // ──────────────────────────────
+    loadFarmers() {
+        const list = document.getElementById('admin-farmers-list');
+        const farmers = this.dataService.getAllFarmers();
+        const badge = document.getElementById('farmers-badge');
+
+        if (farmers.length > 0) {
+            badge.textContent = farmers.length;
+            badge.style.display = 'inline-flex';
+        } else {
+            badge.style.display = 'none';
+        }
+
+        if (!farmers.length) {
+            list.innerHTML = `
+                <div class="empty-state" style="text-align:center;padding:4rem 2rem;color:#6b7b6b;">
+                    <i class="fas fa-users" style="font-size:3rem;margin-bottom:1rem;color:var(--primary);display:block;"></i>
+                    <p>No farmers registered yet.</p>
+                </div>`;
+            return;
+        }
+
+        list.innerHTML = farmers.map(f => `
+            <div class="contact-card">
+                <div class="contact-card-info">
+                    <h3>${this.escape(f.name)}</h3>
+                    <p><strong>Email:</strong> <a href="mailto:${this.escape(f.email)}">${this.escape(f.email)}</a></p>
+                    <p><strong>Phone:</strong> ${this.escape(f.phone || 'N/A')}</p>
+                    <p><strong>Area:</strong> ${this.escape(f.area || 'N/A')}</p>
+                </div>
+                <div class="contact-card-actions">
+                    <button class="btn-delete" onclick="dashboard.deleteFarmer('${f.id}')">
+                        <i class="fas fa-trash"></i> Delete Account
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    deleteFarmer(id) {
+        if (!confirm('Delete this farmer account? This will also delete their listings and applications.')) return;
+        this.dataService.deleteFarmer(id);
+        this.loadFarmers();
+        this.loadProduce();
+        this.loadApplications();
+        this.showToast('Farmer deleted.', 'success');
+    }
+
+    // ──────────────────────────────
+    // Produce Market Management
+    // ──────────────────────────────
+    loadProduce() {
+        const list = document.getElementById('admin-produce-list');
+        const listings = this.dataService.getAllListings();
+        const badge = document.getElementById('produce-badge');
+
+        const pendingCount = listings.filter(l => l.status === 'pending').length;
+
+        if (pendingCount > 0) {
+            badge.textContent = pendingCount;
+            badge.style.display = 'inline-flex';
+        } else {
+            badge.style.display = 'none';
+        }
+
+        if (!listings.length) {
+            list.innerHTML = `
+                <div class="empty-state" style="text-align:center;padding:4rem 2rem;color:#6b7b6b;">
+                    <i class="fas fa-store" style="font-size:3rem;margin-bottom:1rem;color:#e67e22;display:block;"></i>
+                    <p>No produce listings yet.</p>
+                </div>`;
+            return;
+        }
+
+        list.innerHTML = listings.map(l => {
+            const statusLabel = l.status === 'active' ? '<span style="color:#2ecc71;font-weight:600;"><i class="fas fa-check-circle"></i> Active</span>' :
+                l.status === 'pending' ? '<span style="color:#e67e22;font-weight:600;"><i class="fas fa-clock"></i> Pending</span>' :
+                    '<span style="color:#e74c3c;font-weight:600;"><i class="fas fa-ban"></i> Rejected</span>';
+
+            return `
+            <div class="contact-card" style="border-left: 4px solid ${l.status === 'active' ? '#2ecc71' : (l.status === 'pending' ? '#f1c40f' : '#e74c3c')}">
+                <div class="contact-card-info">
+                    <h3>${this.escape(l.name)} (${this.escape(l.type)})</h3>
+                    <p><strong>Farmer:</strong> ${this.escape(l.farmerName)} | <strong>Location:</strong> ${this.escape(l.location)}</p>
+                    <p><strong>Price:</strong> ${this.escape(l.price || 'N/A')} | <strong>Qty:</strong> ${this.escape(l.qty || 'N/A')}</p>
+                    <p><strong>Status:</strong> ${statusLabel}</p>
+                    <div class="contact-card-msg">${this.escape(l.desc || 'No description provided.')}</div>
+                </div>
+                <div class="contact-card-actions" style="display:flex; flex-direction:column; gap:0.5rem; align-items:flex-end;">
+                    <span class="contact-date">${l.date ? new Date(l.date).toLocaleDateString() : 'N/A'}</span>
+                    <div style="display:flex; gap:0.5rem;">
+                        ${l.status !== 'active' ? `<button class="btn-primary" style="padding:0.4rem 0.8rem;font-size:0.85rem;" onclick="dashboard.updateProduceStatus('${l.id}', 'active')"><i class="fas fa-check"></i> Approve</button>` : ''}
+                        ${l.status !== 'rejected' && l.status !== 'pending' ? `<button class="btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.85rem;" onclick="dashboard.updateProduceStatus('${l.id}', 'pending')"><i class="fas fa-pause"></i> Suspend</button>` : ''}
+                        <button class="btn-delete" style="padding:0.4rem 0.8rem;font-size:0.85rem;" onclick="dashboard.deleteProduce('${l.id}')"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+        `}).join('');
+    }
+
+    deleteProduce(id) {
+        if (!confirm('Delete this produce listing?')) return;
+        this.dataService.deleteListing(id);
+        this.loadProduce();
+        this.showToast('Listing deleted.', 'success');
+    }
+
+    updateProduceStatus(id, status) {
+        if (this.dataService.updateListingStatus(id, status)) {
+            this.loadProduce();
+            this.showToast('Listing status updated.', 'success');
+        }
+    }
+
+    // ──────────────────────────────
+    // Applications Management
+    // ──────────────────────────────
+    loadApplications() {
+        const list = document.getElementById('admin-applications-list');
+        const apps = this.dataService.getAllApplications();
+        const badge = document.getElementById('apps-badge');
+
+        const pendingCount = apps.filter(a => a.status === 'pending' || !a.status).length;
+
+        if (pendingCount > 0) {
+            badge.textContent = pendingCount;
+            badge.style.display = 'inline-flex';
+        } else {
+            badge.style.display = 'none';
+        }
+
+        if (!apps.length) {
+            list.innerHTML = `
+                <div class="empty-state" style="text-align:center;padding:4rem 2rem;color:#6b7b6b;">
+                    <i class="fas fa-clipboard-check" style="font-size:3rem;margin-bottom:1rem;color:#3498db;display:block;"></i>
+                    <p>No service applications received.</p>
+                </div>`;
+            return;
+        }
+
+        list.innerHTML = apps.map(a => {
+            const statusLabel = a.status === 'approved' ? '<span style="color:#2ecc71;font-weight:600;"><i class="fas fa-check-circle"></i> Approved</span>' :
+                a.status === 'review' ? '<span style="color:#f39c12;font-weight:600;"><i class="fas fa-search"></i> In Review</span>' :
+                    (a.status === 'rejected' ? '<span style="color:#e74c3c;font-weight:600;"><i class="fas fa-times-circle"></i> Rejected</span>' :
+                        '<span style="color:#3498db;font-weight:600;"><i class="fas fa-clock"></i> Pending</span>');
+
+            return `
+            <div class="contact-card" style="border-left: 4px solid ${a.status === 'approved' ? '#2ecc71' : (a.status === 'review' ? '#f39c12' : (a.status === 'rejected' ? '#e74c3c' : '#3498db'))}">
+                <div class="contact-card-info">
+                    <h3>${this.escape(a.service).toUpperCase()} Application</h3>
+                    <p><strong>Applicant:</strong> ${this.escape(a.name)} | <strong>Contact:</strong> ${this.escape(a.phone)}</p>
+                    <p><strong>Farm Type:</strong> ${this.escape(a.farmType || 'N/A')} | <strong>Size:</strong> ${this.escape(a.farmSize || 'N/A')}</p>
+                    <p><strong>Specific Interest:</strong> ${this.escape(a.specific || 'None specified')}</p>
+                    <p><strong>Status:</strong> ${statusLabel}</p>
+                    ${a.message ? `<div class="contact-card-msg"><strong>Message:</strong> ${this.escape(a.message)}</div>` : ''}
+                </div>
+                <div class="contact-card-actions" style="display:flex; flex-direction:column; gap:0.5rem; align-items:flex-end;">
+                    <span class="contact-date">${a.createdAt ? new Date(a.createdAt).toLocaleDateString() : 'Unknown Date'}</span>
+                    <select class="status-select" onchange="dashboard.updateAppStatus('${a.id}', this.value)" style="padding:0.4rem; border-radius:4px; border:1px solid #ccc; font-family:inherit;">
+                        <option value="pending" ${!a.status || a.status === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="review" ${a.status === 'review' ? 'selected' : ''}>In Review</option>
+                        <option value="approved" ${a.status === 'approved' ? 'selected' : ''}>Approved</option>
+                        <option value="rejected" ${a.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                    </select>
+                </div>
+            </div>
+        `}).join('');
+    }
+
+    updateAppStatus(id, status) {
+        if (this.dataService.updateApplicationStatus(id, status)) {
+            this.loadApplications();
+            this.showToast('Application status updated.', 'success');
+        }
     }
 
     // ──────────────────────────────

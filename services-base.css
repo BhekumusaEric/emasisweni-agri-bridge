@@ -1270,3 +1270,141 @@ body.services-body {
         transform: translateX(0)
     }
 }
+
+/* ========================================================
+   AUTHENTICATION UI (shared mobile/web)
+   ======================================================== */
+.header-profile-wrap {
+    position: relative;
+}
+
+.auth-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 220px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    z-index: 1000;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    display: none;
+    /* Controlled by toggleAuthPanel */
+}
+
+.auth-panel-user {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.auth-panel-user strong {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.auth-panel-user span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.btn-auth-trigger,
+.btn-logout {
+    width: 100%;
+    padding: 0.6rem;
+    background: var(--surface);
+    color: var(--agri-green);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.btn-logout {
+    background: #fffafa;
+    color: #dc3545;
+    border-color: #ffebeb;
+}
+
+.btn-logout:hover {
+    background: #feebeb;
+}
+
+.auth-modal-card {
+    background: #fff;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 20px;
+    padding: 2.5rem;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.auth-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.auth-tab {
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    position: relative;
+}
+
+.auth-tab.active {
+    color: var(--agri-green);
+}
+
+.auth-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--agri-green);
+}
+
+.auth-view {
+    display: none;
+}
+
+.auth-view.active {
+    display: block;
+}
+
+.auth-view h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.auth-view p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive Modal (for narrow mobile) */
+@media (max-width: 480px) {
+    .auth-modal-card {
+        padding: 1.5rem;
+        border-radius: 0;
+        height: 100vh;
+        max-width: 100%;
+    }
+}

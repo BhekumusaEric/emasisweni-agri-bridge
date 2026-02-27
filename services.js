@@ -4,17 +4,9 @@
  */
 'use strict';
 
-/* ==================== DATA STORE ==================== */
-const DB = {
-    get: (key) => JSON.parse(localStorage.getItem('agri_' + key) || '[]'),
-    set: (key, val) => localStorage.setItem('agri_' + key, JSON.stringify(val)),
-    push: (key, item) => {
-        const arr = DB.get(key);
-        arr.unshift({ ...item, id: Date.now(), createdAt: new Date().toISOString() });
-        DB.set(key, arr);
-        return arr[0];
-    }
-};
+// Global Instances
+const ds = new DataService();
+const auth = new FarmerAuth(ds);
 
 const PRODUCE_EMOJI = {
     'Vegetables (Leafy Greens)': '🥬', 'Vegetables (Root Crops)': '🥕',
@@ -24,49 +16,200 @@ const PRODUCE_EMOJI = {
 
 /* ==================== INIT ==================== */
 document.addEventListener('DOMContentLoaded', () => {
-    // Check saved role
+    // Check saved role first
     const savedRole = sessionStorage.getItem('agri_role');
     if (savedRole) {
         showPortal(savedRole);
     }
+
     initTabSwitching();
     initServicePills();
-    refreshFarmerStats();
+    updateUIForUser();
+
+    // Initial renders
     renderFarmerStatusList();
     renderFarmerProduceList();
     renderMarketProduceGrid();
-
-    // Greeting
-    const hr = new Date().getHours();
-    const greeting = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
-    const el = document.getElementById('farmer-greeting');
-    if (el) el.textContent = `${greeting}, Farmer 👋`;
 });
+
+/* ==================== AUTH UI LOGIC ==================== */
+function openAuthModal() {
+    document.getElementById('auth-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAuthModal() {
+    document.getElementById('auth-modal').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+function switchAuthTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase() === tab));
+    document.querySelectorAll('.auth-view').forEach(v => v.classList.toggle('active', v.id === tab + '-view'));
+}
+
+async function handleAuthSubmit(e, mode) {
+    e.preventDefault();
+    let result;
+    if (mode === 'login') {
+        const email = document.getElementById('login-email').value;
+        const pass = document.getElementById('login-pass').value;
+        result = auth.handleLogin(email, pass);
+    } else {
+        const userData = {
+            name: document.getElementById('reg-name').value,
+            email: document.getElementById('reg-email').value,
+            phone: document.getElementById('reg-phone').value,
+            area: document.getElementById('reg-area').value,
+            password: document.getElementById('reg-pass').value
+        };
+        result = auth.handleRegister(userData);
+        if (result.success) {
+            // Auto login after registration
+            result = auth.handleLogin(userData.email, userData.password);
+        }
+    }
+
+    if (result.success) {
+        closeAuthModal();
+        updateUIForUser();
+        showToast('Welcome, ' + result.user.name + '!', 'success');
+        // Refresh data
+        renderFarmerStatusList();
+        renderFarmerProduceList();
+        refreshFarmerStats();
+    } else {
+        showToast(result.message, 'error');
+    }
+}
+
+function toggleAuthPanel() {
+    const user = ds.getCurrentUser();
+    if (!user) {
+        openAuthModal();
+        return;
+    }
+    const panel = document.getElementById('auth-panel');
+    const shown = panel.style.display !== 'none';
+    panel.style.display = shown ? 'none' : 'block';
+
+    if (!shown) {
+        document.getElementById('auth-panel-content').innerHTML = `
+            <div class="auth-panel-user">
+                <strong>${esc(user.name)}</strong>
+                <span>${esc(user.email)}</span>
+            </div>
+            <button class="auth-btn-logout" style="margin-bottom: 0.5rem; background: var(--secondary);" onclick="openProfileModal()">
+                <i class="fas fa-user-edit"></i> Manage Profile
+            </button>
+            <button class="auth-btn-logout" onclick="auth.handleLogout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        `;
+    }
+}
+
+function openProfileModal() {
+    const user = ds.getCurrentUser();
+    if (!user) return;
+
+    // Populate form
+    document.getElementById('prof-name').value = user.name || '';
+    document.getElementById('prof-email').value = user.email || '';
+    document.getElementById('prof-phone').value = user.phone || '';
+    document.getElementById('prof-area').value = user.area || '';
+
+    document.getElementById('profile-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    toggleAuthPanel(); // Close the panel so it's not behind the modal
+}
+
+function closeProfileModal() {
+    document.getElementById('profile-modal').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+function handleProfileSubmit(e) {
+    e.preventDefault();
+    const user = ds.getCurrentUser();
+    if (!user) return;
+
+    const updatedData = {
+        name: document.getElementById('prof-name').value.trim(),
+        phone: document.getElementById('prof-phone').value.trim(),
+        area: document.getElementById('prof-area').value.trim()
+    };
+
+    const res = ds.updateUser(user.id, updatedData);
+    if (res.success) {
+        closeProfileModal();
+        updateUIForUser();
+        renderFarmerProduceList(); // Refresh any list that shows the user's name
+        showToast('Profile updated successfully!', 'success');
+    } else {
+        showToast(res.message, 'error');
+    }
+}
+
+function updateUIForUser() {
+    const user = ds.getCurrentUser();
+    const label = document.getElementById('user-name-label');
+    const greeting = document.getElementById('farmer-greeting');
+
+    const hr = new Date().getHours();
+    const timeGreet = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+
+    if (user) {
+        if (label) {
+            label.textContent = user.name;
+            label.style.display = 'inline';
+        }
+        if (greeting) greeting.textContent = `${timeGreet}, ${user.name} 👋`;
+        // Pre-fill forms
+        if (document.getElementById('p-farmer-name')) document.getElementById('p-farmer-name').value = user.name;
+        if (document.getElementById('p-phone')) document.getElementById('p-phone').value = user.phone;
+        if (document.getElementById('p-location')) document.getElementById('p-location').value = user.area;
+
+        if (document.getElementById('app-name')) document.getElementById('app-name').value = user.name;
+        if (document.getElementById('app-phone')) document.getElementById('app-phone').value = user.phone;
+        if (document.getElementById('app-email')) document.getElementById('app-email').value = user.email;
+        if (document.getElementById('app-area')) document.getElementById('app-area').value = user.area;
+
+        refreshFarmerStats();
+    } else {
+        if (label) label.style.display = 'none';
+        if (greeting) greeting.textContent = `${timeGreet}, Farmer 👋`;
+    }
+}
 
 /* ==================== ROLE SELECTOR ==================== */
 function selectRole(role) {
     sessionStorage.setItem('agri_role', role);
     showPortal(role);
+
+    // If farmer and not logged in, prompt login
+    if (role === 'farmer' && !ds.getCurrentUser()) {
+        setTimeout(openAuthModal, 500);
+    }
 }
 
 function showPortal(role) {
     document.getElementById('role-screen').style.display = 'none';
     const app = document.getElementById('portal-app');
-    app.style.display = 'flex';
+    if (app) app.style.display = 'flex';
 
-    // Hide all portals
     ['farmer-portal', 'market-portal', 'partner-portal'].forEach(id => {
-        document.getElementById(id).style.display = 'none';
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
     });
 
     const titles = { farmer: 'Farmer Services', market: 'Market Portal', partner: 'Partner Portal' };
-    document.getElementById('portal-title').textContent = titles[role] || 'Services';
+    const titleEl = document.getElementById('portal-title');
+    if (titleEl) titleEl.textContent = titles[role] || 'Services';
 
     const portalId = role + '-portal';
     const portal = document.getElementById(portalId);
-    if (portal) {
-        portal.style.display = 'block';
-    }
+    if (portal) portal.style.display = 'block';
 }
 
 function goBackToRoleScreen() {
@@ -75,20 +218,21 @@ function goBackToRoleScreen() {
     document.getElementById('portal-app').style.display = 'none';
 }
 
-function openProfile() {
-    showToast('Profile management coming soon!', 'success');
-}
-
 /* ==================== TAB SWITCHING ==================== */
 function initTabSwitching() {
     document.querySelectorAll('.sec-tab').forEach(btn => {
         btn.addEventListener('click', () => {
             const target = btn.dataset.target;
             if (!target) return;
-            const tabs = btn.closest('.section-tabs');
-            const panels = tabs.nextElementSibling;
-            // Find the parent portal-view and switch within it
+
+            // Check auth for protected tables
+            if (['ftab-produce', 'ftab-apply', 'ftab-status'].includes(target) && !ds.getCurrentUser()) {
+                openAuthModal();
+                return;
+            }
+
             const portalView = btn.closest('.portal-view');
+            const tabs = btn.closest('.section-tabs');
 
             tabs.querySelectorAll('.sec-tab').forEach(t => t.classList.remove('active'));
             btn.classList.add('active');
@@ -101,7 +245,12 @@ function initTabSwitching() {
 }
 
 function switchFarmerTab(tabId, serviceType) {
-    // Activate the right tab button
+    // Check auth
+    if (!ds.getCurrentUser()) {
+        openAuthModal();
+        return;
+    }
+
     document.querySelectorAll('#farmer-portal .sec-tab').forEach(t => {
         t.classList.toggle('active', t.dataset.target === tabId);
     });
@@ -110,7 +259,6 @@ function switchFarmerTab(tabId, serviceType) {
     });
 
     if (serviceType && tabId === 'ftab-apply') {
-        // Select the right service pill
         document.querySelectorAll('.svc-pill').forEach(p => {
             p.classList.toggle('active', p.dataset.svc === serviceType);
         });
@@ -124,7 +272,8 @@ function initServicePills() {
         pill.addEventListener('click', () => {
             document.querySelectorAll('.svc-pill').forEach(p => p.classList.remove('active'));
             pill.classList.add('active');
-            document.getElementById('app-service-type').value = pill.dataset.svc;
+            const typeInput = document.getElementById('app-service-type');
+            if (typeInput) typeInput.value = pill.dataset.svc;
             updateApplicationForm(pill.dataset.svc);
         });
     });
@@ -166,6 +315,10 @@ function updateApplicationForm(svc) {
 
 /* ==================== PRODUCE LISTING ==================== */
 function openProduceForm() {
+    if (!ds.getCurrentUser()) {
+        openAuthModal();
+        return;
+    }
     document.getElementById('produce-form-wrap').style.display = 'flex';
     document.body.style.overflow = 'hidden';
 }
@@ -174,10 +327,14 @@ function closeProduceForm() {
     document.getElementById('produce-form-wrap').style.display = 'none';
     document.body.style.overflow = '';
     document.getElementById('produce-form').reset();
+    updateUIForUser(); // Restore defaults
 }
 
 function submitProduceListing(e) {
     e.preventDefault();
+    const user = ds.getCurrentUser();
+    if (!user) return;
+
     const listing = {
         farmerName: document.getElementById('p-farmer-name').value.trim(),
         phone: document.getElementById('p-phone').value.trim(),
@@ -187,10 +344,10 @@ function submitProduceListing(e) {
         qty: document.getElementById('p-qty').value.trim(),
         price: document.getElementById('p-price').value.trim(),
         date: document.getElementById('p-date').value,
-        desc: document.getElementById('p-desc').value.trim(),
-        status: 'active'
+        desc: document.getElementById('p-desc').value.trim()
     };
-    DB.push('listings', listing);
+
+    ds.addListing(listing, user.id);
     closeProduceForm();
     renderFarmerProduceList();
     renderMarketProduceGrid();
@@ -201,19 +358,27 @@ function submitProduceListing(e) {
 function renderFarmerProduceList() {
     const list = document.getElementById('farmer-produce-list');
     if (!list) return;
-    const items = DB.get('listings');
+
+    const user = ds.getCurrentUser();
+    if (!user) {
+        list.innerHTML = `<div class="empty-panel"><i class="fas fa-lock"></i><p>Log in to manage your produce.</p></div>`;
+        return;
+    }
+
+    const items = ds.getListings(user.id);
     if (!items.length) {
         list.innerHTML = `<div class="empty-panel"><i class="fas fa-seedling"></i><p>No produce listed yet.<br>Add your first listing to reach buyers.</p></div>`;
         return;
     }
+
     list.innerHTML = items.map(item => `
-        <div class="produce-item" onclick="openProduceDetail(${item.id})">
+        <div class="produce-item" onclick="openProduceDetail('${item.id}')">
             <div class="produce-item-icon">${PRODUCE_EMOJI[item.type] || '🌾'}</div>
             <div class="produce-item-info">
                 <h4>${esc(item.name)}</h4>
                 <p>${esc(item.location)} · ${esc(item.farmerName)}</p>
                 <div class="produce-item-actions" onclick="event.stopPropagation()">
-                    <button class="produce-action-btn del" onclick="deleteListing(${item.id})">Remove</button>
+                    <button class="produce-action-btn del" onclick="deleteListing('${item.id}')">Remove</button>
                 </div>
             </div>
             <div class="produce-item-meta">
@@ -225,8 +390,9 @@ function renderFarmerProduceList() {
 }
 
 function deleteListing(id) {
-    const updated = DB.get('listings').filter(l => l.id !== id);
-    DB.set('listings', updated);
+    const all = JSON.parse(localStorage.getItem('agri_listings') || '[]');
+    const updated = all.filter(l => l.id !== id);
+    localStorage.setItem('agri_listings', JSON.stringify(updated));
     renderFarmerProduceList();
     renderMarketProduceGrid();
     refreshFarmerStats();
@@ -236,6 +402,12 @@ function deleteListing(id) {
 /* ==================== APPLICATIONS ==================== */
 function submitApplication(e) {
     e.preventDefault();
+    const user = ds.getCurrentUser();
+    if (!user) {
+        openAuthModal();
+        return;
+    }
+
     const svc = document.getElementById('app-service-type').value;
     const specific = document.getElementById('app-specific');
     const application = {
@@ -247,38 +419,48 @@ function submitApplication(e) {
         farmSize: document.getElementById('app-farm-size').value,
         farmType: document.getElementById('app-farm-type').value,
         specific: specific ? specific.value : '',
-        message: document.getElementById('app-message').value.trim(),
-        status: 'pending'
+        message: document.getElementById('app-message').value.trim()
     };
-    DB.push('applications', application);
+
+    ds.addApplication(application, user.id);
     document.getElementById('application-form').reset();
+    updateUIForUser();
     updateApplicationForm('training');
     renderFarmerStatusList();
     refreshFarmerStats();
     showToast('✅ Application submitted! We\'ll contact you within 2 days.', 'success');
-    // Switch to status tab
+
     setTimeout(() => switchFarmerTab('ftab-status', null), 1200);
 }
 
 function renderFarmerStatusList() {
     const list = document.getElementById('farmer-status-list');
     if (!list) return;
-    const apps = DB.get('applications');
-    const listings = DB.get('listings');
+
+    const user = ds.getCurrentUser();
+    if (!user) {
+        list.innerHTML = `<div class="empty-panel"><i class="fas fa-lock"></i><p>Log in to view applications.</p></div>`;
+        return;
+    }
+
+    const apps = ds.getApplications(user.id);
+    const listings = ds.getListings(user.id);
     const all = [
         ...apps.map(a => ({ ...a, _type: 'application' })),
         ...listings.map(l => ({ ...l, _type: 'listing', service: 'produce', name: l.farmerName || 'Me' }))
-    ].sort((a, b) => b.id - a.id);
+    ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     if (!all.length) {
         list.innerHTML = `<div class="empty-panel"><i class="fas fa-clipboard-list"></i><p>No applications yet.<br>Submit your first request using the Apply tab.</p></div>`;
         return;
     }
+
     const svcLabels = {
         training: 'Training & Mentorship', waste: 'Waste Management',
         agro: 'Agro-Processing', food: 'Food Security',
         climate: 'Climate-Smart Farming', market: 'Market Access', produce: 'Produce Listing'
     };
+
     list.innerHTML = all.map(item => `
         <div class="status-item">
             <div class="status-item-header">
@@ -303,8 +485,12 @@ function formatDate(iso) {
 }
 
 function refreshFarmerStats() {
-    const apps = DB.get('applications').length;
-    const listings = DB.get('listings').length;
+    const user = ds.getCurrentUser();
+    if (!user) return;
+
+    const apps = ds.getApplications(user.id).length;
+    const listings = ds.getListings(user.id).length;
+
     const el1 = document.getElementById('my-applications-count');
     const el2 = document.getElementById('my-listings-count');
     const el3 = document.getElementById('my-requests-count');
@@ -317,7 +503,7 @@ function refreshFarmerStats() {
 function renderMarketProduceGrid() {
     const grid = document.getElementById('market-produce-grid');
     if (!grid) return;
-    const listings = DB.get('listings').filter(l => l.status === 'active');
+    const listings = ds.getListings().filter(l => l.status === 'active');
     const emptyEl = document.getElementById('market-empty');
 
     if (!listings.length) {
@@ -326,8 +512,8 @@ function renderMarketProduceGrid() {
         return;
     }
     if (emptyEl) emptyEl.style.display = 'none';
-    // Remove old cards
     grid.querySelectorAll('.market-produce-card').forEach(c => c.remove());
+
     listings.forEach(item => {
         const card = document.createElement('div');
         card.className = 'market-produce-card';
@@ -349,7 +535,7 @@ function renderMarketProduceGrid() {
 function filterProduce() {
     const q = (document.getElementById('produce-search')?.value || '').toLowerCase();
     const type = document.getElementById('filter-type')?.value || '';
-    const listings = DB.get('listings').filter(l => {
+    const listings = ds.getListings().filter(l => {
         const matchQ = !q || l.name.toLowerCase().includes(q) || l.location.toLowerCase().includes(q) || (l.farmerName || '').toLowerCase().includes(q);
         const matchT = !type || l.type === type;
         return l.status === 'active' && matchQ && matchT;
@@ -392,8 +578,7 @@ function toggleFilter() {
 
 /* ==================== PRODUCE DETAIL MODAL ==================== */
 function openProduceDetail(id) {
-    const listings = DB.get('listings');
-    const item = listings.find(l => l.id === id);
+    const item = ds.getListings().find(l => l.id === id);
     if (!item) return;
     const body = document.getElementById('produce-modal-body');
     const link = document.getElementById('produce-contact-link');
@@ -444,7 +629,7 @@ function submitBuyerRegistration(e) {
         location: document.getElementById('b-location').value.trim(),
         notes: document.getElementById('b-notes').value.trim()
     };
-    DB.push('buyers', buyer);
+    ds.addContact({ ...buyer, type: 'buyer_reg' });
     document.getElementById('buyer-form').reset();
     showToast('✅ Registered as buyer! Our market team will be in touch.', 'success');
 }
@@ -458,7 +643,7 @@ function submitMarketContact(e) {
         message: document.getElementById('mc-message').value.trim(),
         type: 'market_inquiry'
     };
-    DB.push('contacts', msg);
+    ds.addContact(msg);
     document.getElementById('market-contact-form').reset();
     showToast('✅ Message sent! We\'ll get back to you soon.', 'success');
 }
@@ -474,7 +659,7 @@ function submitPartnerInquiry(e) {
         type: document.getElementById('pt-type').value,
         message: document.getElementById('pt-message').value.trim()
     };
-    DB.push('partners', inquiry);
+    ds.addContact({ ...inquiry, type: 'partner_inquiry' });
     document.getElementById('partner-form').reset();
     showToast('✅ Inquiry submitted! Our partnerships team will be in touch.', 'success');
 }

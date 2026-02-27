@@ -58,7 +58,18 @@
                 <img src="./Emasisweni AgriBridge Logo.png" alt="Logo">
                 <span id="portal-title">Services</span>
             </div>
-            <button class="header-profile" onclick="openProfile()"><i class="fas fa-user-circle"></i></button>
+            <button class="header-profile" id="profile-btn" onclick="toggleAuthPanel()"><i
+                    class="fas fa-user-circle"></i></button>
+            <div id="auth-panel" class="auth-panel">
+                <div id="user-info">
+                    <p>Not signed in</p>
+                    <button class="btn-auth-trigger" onclick="openAuthModal()">Login / Register</button>
+                </div>
+                <div id="user-actions" style="display:none;">
+                    <p id="user-display-name"></p>
+                    <button class="btn-logout" onclick="auth.handleLogout()">Logout</button>
+                </div>
+            </div>
         </header>
 
         <!-- FARMER PORTAL -->
@@ -459,7 +470,93 @@
         </div>
     </div>
 
-    <!-- Shared data layer only (no layout code) -->
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="modal-overlay" style="display:none;">
+        <div class="auth-modal-card">
+            <button class="form-close" onclick="closeAuthModal()"><i class="fas fa-times"></i></button>
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+                <button class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+            </div>
+
+            <div id="login-view" class="auth-view active">
+                <h3>Welcome Back</h3>
+                <p>Login to manage your farm</p>
+                <form onsubmit="handleAuthSubmit(event, 'login')">
+                    <div class="field-group">
+                        <label>Email Address</label>
+                        <input type="email" id="login-email" required placeholder="name@example.com">
+                    </div>
+                    <div class="field-group">
+                        <label>Password</label>
+                        <input type="password" id="login-pass" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn-submit">Login</button>
+                </form>
+            </div>
+
+            <div id="register-view" class="auth-view">
+                <h3>Create Account</h3>
+                <form onsubmit="handleAuthSubmit(event, 'register')">
+                    <div class="field-group">
+                        <label>Full Name</label>
+                        <input type="text" id="reg-name" required placeholder="Your full name">
+                    </div>
+                    <div class="field-group">
+                        <label>Email Address</label>
+                        <input type="email" id="reg-email" required placeholder="name@example.com">
+                    </div>
+                    <div class="field-group">
+                        <label>Phone</label>
+                        <input type="tel" id="reg-phone" required placeholder="071 000 0000">
+                    </div>
+                    <div class="field-group">
+                        <label>Area</label>
+                        <input type="text" id="reg-area" required placeholder="e.g. Impendle">
+                    </div>
+                    <div class="field-group">
+                        <label>Create Password</label>
+                        <input type="password" id="reg-pass" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn-submit">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Management Modal -->
+    <div id="profile-modal" class="modal-overlay" style="display:none;">
+        <div class="auth-modal-card">
+            <button class="form-close" onclick="closeProfileModal()"><i class="fas fa-times"></i></button>
+            <div id="profile-view" class="auth-view active">
+                <h3>Manage Profile</h3>
+                <p>Update your details</p>
+                <form id="profile-form" onsubmit="handleProfileSubmit(event)">
+                    <div class="field-group">
+                        <label>Full Name</label>
+                        <input type="text" id="prof-name" required>
+                    </div>
+                    <div class="field-group">
+                        <label>Email Address</label>
+                        <input type="email" id="prof-email" readonly disabled style="opacity:0.7; cursor:not-allowed;">
+                    </div>
+                    <div class="field-group">
+                        <label>Phone</label>
+                        <input type="tel" id="prof-phone" required>
+                    </div>
+                    <div class="field-group">
+                        <label>Area</label>
+                        <input type="text" id="prof-area" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Save Updates</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shared data layer -->
+    <script src="./data-service.js"></script>
+    <script src="./farmer-auth.js"></script>
     <script src="./services.js"></script>
 </body>
 

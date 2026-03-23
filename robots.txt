@@ -6,13 +6,3 @@ Sitemap: https://emasisweniagribridge.org/sitemap.xml
 
 # Disallow admin areas
 Disallow: /admin/
-Disallow: /*.js$
-Disallow: /*.css$
-
-# Allow important pages
-Allow: /index.html
-Allow: /about.html
-Allow: /programs.html
-Allow: /impact.html
-Allow: /news.html
-Allow: /contact.html
